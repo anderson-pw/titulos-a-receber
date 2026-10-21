@@ -88,7 +88,7 @@
   </div>
  </main>
 </div>
-<dialog id="uploadDialog"><div class="dialog-header"><div><span class="section-overline">ATUALIZAÇÃO DE DADOS</span><h2>Carregar as duas bases</h2></div><button class="icon-btn" data-close="uploadDialog" aria-label="Fechar">×</button></div><p class="dialog-intro">Exporte os CSVs do Protheus separados por ponto e vírgula, mantendo as colunas indicadas nas orientações.</p><label class="file-box"><span class="file-tag">SE1</span><strong>Contas a receber · reversão</strong><input type="file" id="fileSe1" accept=".csv,text/csv"><span id="fileSe1Name">Selecione o CSV da SE1</span></label><label class="file-box"><span class="file-tag">SE5</span><strong>Movimentação bancária · conferência</strong><input type="file" id="fileSe5" accept=".csv,text/csv"><span id="fileSe5Name">Selecione o CSV da SE5</span></label><p class="dialog-note">Os dois arquivos são validados antes de substituir a visão. Depois, exporte a base consolidada para consultas e tratativas.</p><div id="uploadError" class="error-message" role="alert" hidden></div><div class="dialog-actions"><button class="btn secondary" data-close="uploadDialog">Cancelar</button><button class="btn primary" id="loadFiles">Consolidar bases</button></div></dialog>
+<dialog id="uploadDialog"><div class="dialog-header"><div><span class="section-overline">ATUALIZAÇÃO DE DADOS</span><h2>Carregar as duas bases</h2></div><button class="icon-btn" data-close="uploadDialog" aria-label="Fechar">×</button></div><p class="dialog-intro">Exporte os CSVs do Protheus separados por ponto e vírgula, mantendo as colunas indicadas nas orientações.</p><label class="file-box"><span class="file-tag">SE1</span><strong>Contas a receber · reversão</strong><input type="file" id="fileSe1" accept=".csv,text/csv"><span id="fileSe1Name">Selecione o CSV da SE1</span></label><label class="file-box"><span class="file-tag">SE5</span><strong>Movimentação bancária · conferência</strong><input type="file" id="fileSe5" accept=".csv,text/csv"><span id="fileSe5Name">Selecione o CSV da SE5</span></label><p class="dialog-note">A atualização mantém o período selecionado quando ele existe na nova base. Na primeira importação, o painel usa o primeiro mês de baixa da SE1. Depois, exporte a base consolidada para consultas e tratativas.</p><div id="uploadError" class="error-message" role="alert" hidden></div><div class="dialog-actions"><button class="btn secondary" data-close="uploadDialog">Cancelar</button><button class="btn primary" id="loadFiles">Consolidar bases</button></div></dialog>
 <dialog id="recordDialog" class="wide-dialog"><div class="dialog-header"><div><span class="section-overline">REGISTROS DE ORIGEM</span><h2 id="recordTitle">Detalhe do título</h2></div><button class="icon-btn" data-close="recordDialog" aria-label="Fechar">×</button></div><div id="recordBody"></div></dialog>
 <div id="toast" class="toast" role="status" hidden></div>
 <script id="dataset" type="application/json">{"se1":[["Prefixo","No. Titulo","Tipo","Cliente","Loja","Nome Cliente","DT Emissao","Vencto real","Vlr.Titulo","DT Baixa","Historico","Tp de Cobran","Saldo","Juros","Vlr.Liq Baix","Filial Orig"]],"se5":[["Filial","DT Movimen","Tipo Titulo","Vlr.Movim.","Vencimento","Beneficiario","Historico","Prefixo","Titulo","Cli/For","Loja","MOT BAIXA","Filial Orig","Valor juros","Fatura","Cliente"]],"files":{"se1":"Aguardando importação da SE1","se5":"Aguardando importação da SE5"},"created":"","publicMode":true}</script>
@@ -230,11 +230,13 @@ function icons(root=document){root.querySelectorAll('[data-icon]').forEach(el=>e
 let raw,model,filtered=[],metrics,tab='executiva',page=1,reconPage=1,sort={key:'real',dir:-1},clientDrill='',toastTimer;
 const titles={executiva:['Visão de recebíveis','Acompanhe os títulos, os valores recebidos e o saldo informado.'],detalhamento:['Detalhamento dos títulos','Consulte a base consolidada e abra cada título para conferir a origem.'],conferencia:['Conferência das bases','Compare valores e investigue as diferenças entre SE1 e SE5.'],metodo:['Critérios e bases','Entenda as regras de cálculo, o alcance e a origem dos dados.']};
 function filters(){return {month:$('monthFilter').value,branch:$('branchFilter').value,status:$('statusFilter').value,query:$('queryFilter').value,client:clientDrill};}
-function options(initial=false){
- const months=[...new Set([...model.se1.filter(r=>r.paid).map(r=>r.paid.slice(0,7)),...model.se5.filter(r=>r.date).map(r=>r.date.slice(0,7))])].sort();
- const oldMonth=$('monthFilter').value,oldBranch=$('branchFilter').value;
+function options(previousMonth=''){
+ const se1Months=[...new Set(model.se1.filter(r=>r.paid).map(r=>r.paid.slice(0,7)))].sort();
+ const months=[...new Set([...se1Months,...model.se5.filter(r=>r.date).map(r=>r.date.slice(0,7))])].sort();
+ const oldBranch=$('branchFilter').value;
  $('monthFilter').innerHTML=months.map(m=>'<option value="'+m+'">'+monthLabel(m)+'</option>').join('')+'<option value="all">Todo o período</option>'+(model.stats.blankPaid?'<option value="none">Sem data da baixa</option>':'');
- $('monthFilter').value=initial&&months.includes('2026-09')?'2026-09':!initial&&months.includes(oldMonth)?oldMonth:(months.at(-1)||'all');
+ const keepMonth=months.includes(previousMonth)||previousMonth==='all'||previousMonth==='none'&&model.stats.blankPaid;
+ $('monthFilter').value=keepMonth?previousMonth:(se1Months[0]||(model.stats.blankPaid?'none':months[0]||'all'));
  const branches=[...new Set([...model.se1.map(r=>r.branch),...model.se5.map(r=>r.branch)])].sort();
  $('branchFilter').innerHTML='<option value="">Todas as filiais</option>'+branches.map(b=>'<option>'+esc(b)+'</option>').join('');
  $('branchFilter').value=branches.includes(oldBranch)?oldBranch:'';
@@ -349,14 +351,20 @@ async function loadFiles(){
  const a=$('fileSe1').files[0],b=$('fileSe5').files[0];$('uploadError').hidden=true;
  if(!a||!b){$('uploadError').textContent='Selecione os dois CSVs para atualizar as bases juntas.';$('uploadError').hidden=false;return;}
  $('loadFiles').disabled=true;$('loadFiles').textContent='Validando...';
- try{const [one,five]=await Promise.all([readFile(a),readFile(b)]),now=new Date(),today=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(now),next={se1:one,se5:five,files:{se1:a.name,se5:b.name},created:today},prepared=E.prepare(next);if(!prepared.se1.length)throw Error('A SE1 não contém registros FT nas filiais do escopo.');raw=next;model=prepared;clientDrill='';page=1;reconPage=1;$('queryFilter').value='';$('statusFilter').value='';options();$('monthFilter').value=[...new Set(model.se1.filter(r=>r.paid).map(r=>r.paid.slice(0,7)))].sort().at(-1)||'all';$('dataset').textContent=JSON.stringify(raw).replace(/</g,'\\u003c');$('uploadDialog').close();render();toast('Bases consolidadas. Os relatórios já usam os novos arquivos.');}
+ try{
+  const [one,five]=await Promise.all([readFile(a),readFile(b)]),now=new Date(),today=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(now),next={se1:one,se5:five,files:{se1:a.name,se5:b.name},created:today},prepared=E.prepare(next);
+  if(!prepared.se1.length)throw Error('A SE1 não contém registros FT nas filiais do escopo.');
+  const previousMonth=model.se1.length?$('monthFilter').value:'';
+  raw=next;model=prepared;clientDrill='';page=1;reconPage=1;$('queryFilter').value='';$('statusFilter').value='';options(previousMonth);
+  $('dataset').textContent=JSON.stringify(raw).replace(/</g,'\\u003c');$('uploadDialog').close();render();toast('Bases atualizadas. Período exibido: '+monthLabel($('monthFilter').value)+'.');
+ }
  catch(e){$('uploadError').textContent=e.message;$('uploadError').hidden=false;}
  finally{$('loadFiles').disabled=false;$('loadFiles').textContent='Consolidar bases';}
 }
 
 function clear(){clientDrill='';$('queryFilter').value='';$('branchFilter').value='';$('statusFilter').value='';$('reconStatus').value='';page=1;reconPage=1;render();}
 function initialize(){
- icons();raw=JSON.parse($('dataset').textContent);model=E.prepare(raw);options(true);
+ icons();raw=JSON.parse($('dataset').textContent);model=E.prepare(raw);options();
  document.querySelector('.brand').onclick=event=>{event.preventDefault();setTab('executiva');};
  document.querySelectorAll('[data-tab]').forEach(n=>n.addEventListener('click',()=>setTab(n.dataset.tab)));
  document.querySelectorAll('[data-goto]').forEach(n=>n.addEventListener('click',()=>setTab(n.dataset.goto)));
