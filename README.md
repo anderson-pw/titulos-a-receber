@@ -4,11 +4,11 @@ Painel HTML de contas a receber com a paleta do Grupo Decio.
 
 ## Recursos
 
-- Top 5 melhores pagadores, com todos os pagamentos até o vencimento no histórico conferido disponível.
+- Top 5 melhores pagadores, com todos os pagamentos até o vencimento no histórico disponível.
 - Top 5 ofensores com pagamentos sempre atrasados mais de um mês de calendário, incluindo a visão mês a mês.
 - Filtros de mês, ilha/tipo do título (CC, CD, NF, FT e outros), filial, situação e cliente.
 - Exclusão de clientes marcados como Desconsiderar nas abas cartões e intercompany do De_para, pelo cliente + loja.
-- Indicadores e CSV consolidado somente com Conferido e Conferido com ressalva. Outras situações ficam na aba de conferência.
+- Indicadores e CSV consolidado incluem todos os resultados da conferência. A classificação de cada registro e os filtros da aba de conferência permitem consultar as pendências.
 - Histórico mensal salvo neste navegador, com backup e restauração.
 
 ## Uso
