@@ -442,7 +442,7 @@ function options(previousMonth=''){
  const branches=[...new Set([...model.se1.map(r=>r.branch),...model.se5.map(r=>r.branch)])].sort();
  $('branchFilter').innerHTML='<option value="">Todas as filiais</option>'+branches.map(b=>'<option>'+esc(b)+'</option>').join('');
  $('branchFilter').value=branches.includes(oldBranch)?oldBranch:'';
- const types=[...new Set(['CC','CD','NF','FT',...model.se1.map(r=>r.type),...model.se5.map(r=>r.type)])].sort();
+ const types=[...new Set(['CC','CD','NF','FT','RA','NCC',...model.se1.map(r=>r.type),...model.se5.map(r=>r.type)])].sort();
  $('typeFilter').innerHTML='<option value="">Todas as ilhas</option>'+types.map(t=>'<option value="'+esc(t)+'">'+esc(t)+'</option>').join('');$('typeFilter').value=types.includes(oldType)?oldType:'';
  $('reconStatus').innerHTML='<option value="">Todos os resultados</option>'+Object.entries(E.reconLabels).map(([v,l])=>'<option value="'+v+'">'+esc(l)+'</option>').join('');
  $('loadedDate').textContent=date(raw.created);
