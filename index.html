@@ -20,6 +20,16 @@
 :root{--primary:#234c9c;--primary-deep:#1e40af;--accent:#00c950;--ink:#18233c;--muted:#65718a;--bg:#f5f7fb;--line:#e2e8f3;--green:var(--primary);--green-dark:var(--primary-deep);--mint:#eaf0fb;--amber:#197ca2}
 .topbar{background:#234c9c;color:#dce6fb;border-bottom-color:#1f448b}.topbar b{color:#9eb8e8}.topbar-right,.topbar-right>span{color:#fff}.live-dot{background:#00c950;box-shadow:0 0 0 3px #ffffff1a}.hero-kpi{background:linear-gradient(135deg,#234c9c,#1e40af)}.hero-top,.hero-footer,.hero-kpi>p{color:#dde7fc}.hero-percent{color:#fff;background:#ffffff1c}.hero-progress>div{background:#00c950}.brand-mark{background:#234c9c;color:#fff}.btn.primary{background:#234c9c;border-color:#234c9c}.btn.primary:hover{background:#1e40af}.nav-item.active{background:#eaf0fb;color:#234c9c}.nav-dot{background:#197ca2}.ranking-amount{color:#234c9c}.amber-ranking .ranking-amount{color:#197ca2}.amber-ranking .ranking-bar i{background:#197ca2}.green-pill{background:#eaf0fb;color:#234c9c}.amber-pill{background:#eaf5fa;color:#197ca2}.status-tag{background:#e8faef;color:#086a38}.status-tag.review{background:#eaf0fb;color:#234c9c}.status-tag.difference{background:#dce7fb;color:#173b7b}.status-tag.missing{background:#eff2f7;color:#65718a}.ratio-tag{background:#eaf0fb;color:#234c9c}.ratio-tag.zero{background:#eaf5fa;color:#197ca2}.ratio-tag.above{background:#e8faef;color:#086a38}.method-callout{background:#edf3ff;border-color:#d4e1fa;color:#4b628c}.method-callout strong{color:#234c9c}.notice{background:#eff4fc;border-color:#dfe8f8;color:#5e7195}.notice strong,.notice .text-btn,.notice svg{color:#234c9c}.footnote,.kpi p,.chart-footer,.source-summary{color:#71809b}.toast{background:#234c9c;color:#fff}
 
+/* Histórico e rankings de prazo */
+.filters{display:grid;grid-template-columns:minmax(145px,1fr) minmax(105px,.7fr) minmax(120px,.8fr) minmax(150px,1fr) minmax(170px,1.3fr) 38px;gap:12px}
+.filters label{min-width:0}.filters select{width:100%;min-width:0}
+.history-strip{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;border:1px solid #d7e2f4;background:#f4f7fd;border-radius:9px;padding:12px 16px;margin:0 0 18px;font-size:11px;color:#234c9c}
+.history-strip>div{display:flex;gap:16px;flex-wrap:wrap}.storage-warning{color:#9a4d06}.text-btn:disabled{opacity:.45;cursor:default}
+.monthly-offenders{margin-top:22px}.monthly-offenders .table-heading p{max-width:870px;line-height:1.8}.monthly-offenders .table-scroll{max-height:420px}
+.ranking-name{white-space:normal}.ranking-client{line-height:1.7}.ranking-amount{white-space:nowrap}.ranking-card .footnote{line-height:1.8}.history-months{margin-top:20px}.history-months .source-row{padding:13px 0}
+@media(max-width:1350px){.filters{grid-template-columns:repeat(3,minmax(0,1fr))}.filters .search-field{grid-column:span 2}}
+@media(max-width:650px){.filters{grid-template-columns:1fr 1fr}.filters .search-field{grid-column:span 1}.history-strip{align-items:flex-start;font-size:10px}.history-strip>div{gap:12px}.ranking-item{grid-template-columns:22px minmax(0,1fr)}.ranking-amount{grid-column:2;text-align:left}.source-row{align-items:flex-start;flex-direction:column}.monthly-offenders .table-heading p{font-size:10px}}
+
 .public-welcome{display:flex;gap:20px;align-items:center;justify-content:space-between;border-left:4px solid #234c9c;padding:20px 23px;margin-bottom:20px}.public-welcome h2{font-size:18px;color:#234c9c}.public-welcome p{font-size:12px;color:#65718a;margin:9px 0 0;line-height:1.8}@media(max-width:760px){.public-welcome{display:block}.public-welcome>.pill{margin-top:12px}}</style>
 </head>
 <body>
@@ -34,22 +44,23 @@
    <button class="nav-item" data-tab="metodo"><span data-icon="book"></span>Critérios e bases</button>
   </nav>
   <div class="sidebar-guide"><span class="guide-icon" data-icon="layers"></span><strong>Da base à decisão.</strong><p>Títulos, recebimentos e conferência em uma única visão.</p><span class="pill sidebar-pill">Protheus · SE1 + SE5</span></div>
-  <div class="sidebar-footer"><div class="avatar">AP</div><div><strong>Anderson Prado</strong><span>Acompanhamento financeiro</span></div></div>
  </aside>
  <main>
   <header class="topbar"><span>FINANCEIRO <b>/</b> CONTAS A RECEBER</span><span class="topbar-right"><i class="live-dot"></i>Base importada <span id="loadedDate">21/10/2026</span></span></header>
   <div class="workspace">
    <section class="page-heading"><div><p class="eyebrow">CLAREZA PARA A SUA COBRANÇA</p><h1 id="pageTitle">Visão de recebíveis</h1><p class="subtitle" id="pageSubtitle">Acompanhe os títulos, os valores recebidos e o saldo informado.</p></div><div class="header-actions"><button class="btn secondary" id="updateBtn"><span data-icon="upload"></span>Atualizar bases</button><button class="btn primary" id="exportBtn"><span data-icon="download"></span>Exportar CSV</button></div></section>
-   <section id="publicWelcome" class="card public-welcome"><div><span class="section-overline">SEU PAINEL DE CONTAS A RECEBER</span><h2>Carregue as bases para consultar os indicadores</h2><p>Clique em <strong>Atualizar bases</strong> e selecione os CSVs da SE1 e da SE5. Os arquivos são processados neste navegador.</p></div><span class="pill green-pill">IMPORTAÇÃO LOCAL</span></section>
+   <section id="publicWelcome" class="card public-welcome"><div><span class="section-overline">SEU PAINEL DE CONTAS A RECEBER</span><h2>Carregue as bases para consultar os indicadores</h2><p>Clique em <strong>Atualizar bases</strong> e selecione os CSVs da SE1 e da SE5 e o De_para na primeira importação. O histórico fica salvo neste navegador.</p></div><span class="pill green-pill">IMPORTAÇÃO LOCAL</span></section>
    <div class="filters" aria-label="Filtros do painel">
     <label><span>Competência da baixa</span><select id="monthFilter" aria-label="Mês da data da baixa"></select></label>
+    <label><span>Ilha / tipo do título</span><select id="typeFilter" aria-label="Filtrar ilha pelo tipo do título"><option value="">Todas as ilhas</option></select></label>
     <label><span>Filial de origem</span><select id="branchFilter" aria-label="Filial de origem"><option value="">Todas as filiais</option></select></label>
     <label><span>Situação SE1</span><select id="statusFilter" aria-label="Situação do recebimento"><option value="">Todas as situações</option><option value="zero">Sem recebimento (zero)</option><option value="partial">Recebimento abaixo de 100%</option><option value="full">Recebimento ≥ 100%</option><option value="open">Com saldo informado</option></select></label>
     <label class="search-field"><span>Consulta rápida</span><div class="search-wrap"><span data-icon="search"></span><input id="queryFilter" type="search" placeholder="Cliente, código ou título..." aria-label="Buscar cliente, código ou título"></div></label>
     <button class="reset-btn" id="clearFilters" title="Limpar filtros" aria-label="Limpar filtros"><span data-icon="reset"></span></button>
    </div>
    <div class="context-line"><span><span class="period-dot"></span><strong id="periodLabel">Setembro de 2026</strong><span id="contextCount"></span></span><button id="drillClear" class="drill-chip" hidden>Limpar cliente ×</button><span id="dateScope" class="muted">Referência: data da baixa na SE1</span></div>
-   <div class="notice" id="scopeNotice"><span data-icon="info"></span><p><strong>Alcance da base:</strong> títulos sem baixa podem estar ausentes. O recebimento segue a fórmula solicitada; os juros podem já estar incluídos no líquido. <button class="text-btn" data-goto="metodo">Ver critérios</button></p></div>
+   <div class="history-strip"><span id="historySummary" role="status">Carregando histórico salvo...</span><div><button class="text-btn" id="backupHistory">Baixar backup do histórico</button><button class="text-btn" id="restoreHistory">Restaurar backup</button><input type="file" id="fileHistory" accept=".json,application/json" hidden></div></div>
+   <div class="notice" id="scopeNotice"><span data-icon="info"></span><p><strong>Base consolidada:</strong> somente Conferido e Conferido com ressalva, após as exclusões do De_para. Títulos sem baixa podem estar ausentes. O recebimento segue a fórmula solicitada; os juros podem já estar incluídos no líquido. <button class="text-btn" data-goto="metodo">Ver critérios</button></p></div>
 
    <section id="executiva" class="tab-panel">
     <div class="kpi-grid">
@@ -65,7 +76,8 @@
      <article class="card chart-card"><div class="card-heading"><div><span class="section-overline">RITMO DOS RECEBIMENTOS</span><h2>Recebimento por data da baixa</h2></div><span class="legend"><i></i>Regra SE1</span></div><div id="dailyChart" class="daily-chart"></div><div class="chart-footer"><span id="dailyNote">Agrupado por dia · valores em R$</span><span id="interestNote"></span></div></article>
      <article class="card portfolio-card"><span class="section-overline">LEITURA DO RECORTE</span><h2>Recebimento dos títulos</h2><div class="donut-wrap"><div class="donut" id="donut"><div><strong id="donutPercent">—</strong><span>com recebimento</span></div></div></div><div class="portfolio-stat"><span><i class="mini-dot green"></i>Com recebimento</span><strong id="paidCount">—</strong></div><div class="portfolio-stat"><span><i class="mini-dot sand"></i>Recebimento zero</span><strong id="zeroCount">—</strong></div><p class="footnote">Contagem por título. A proporção acima não representa percentual financeiro.</p></article>
     </div>
-    <div class="ranking-grid"><article class="card ranking-card"><div class="card-heading"><div><span class="section-overline">RELACIONAMENTO EM DIA</span><h2>Top 5 · clientes com recebimento</h2></div><span class="pill green-pill">MAIOR → MENOR</span></div><div id="topPayers" class="ranking-list"></div><p class="footnote">Soma do recebimento real por cliente e loja. Clique para consultar.</p></article><article class="card ranking-card"><div class="card-heading"><div><span class="section-overline">PRIORIDADE DE CONSULTA</span><h2>Top 5 · clientes com títulos a zero</h2></div><span class="pill amber-pill">RECEBIMENTO = 0</span></div><div id="topOffenders" class="ranking-list amber-ranking"></div><p class="footnote">Ordenado pelo valor dos títulos com recebimento zero. Zeros podem decorrer de descontos, compensações ou estornos.</p></article></div>
+    <div class="ranking-grid"><article class="card ranking-card"><div class="card-heading"><div><span class="section-overline">RELACIONAMENTO EM DIA</span><h2>Top 5 · melhores pagadores</h2></div><span class="pill green-pill">MAIOR → MENOR</span></div><div id="topPayers" class="ranking-list"></div><p class="footnote">Todos os pagamentos até o vencimento no histórico conferido disponível. Ordenação pelo maior recebimento no período selecionado.</p></article><article class="card ranking-card"><div class="card-heading"><div><span class="section-overline">PRIORIDADE DE CONSULTA</span><h2>Top 5 · ofensores recorrentes</h2></div><span class="pill amber-pill">ATRASO &gt; 1 MÊS</span></div><div id="topOffenders" class="ranking-list amber-ranking"></div><p class="footnote">Todos os pagamentos com atraso superior a um mês de calendário no histórico conferido disponível. Ordenação pelo maior recebimento no período.</p></article></div>
+    <article class="card table-card monthly-offenders"><div class="table-heading"><div><span class="section-overline">HISTÓRICO DE PAGAMENTOS</span><h2>Ofensores mês a mês</h2><p>Top 5 por mês da baixa, entre clientes que sempre pagaram com atraso superior a um mês no histórico conferido. O quadro mostra todos os meses salvos e respeita os demais filtros.</p></div></div><div class="table-scroll"><table id="monthlyOffendersTable"><thead><tr><th>Mês da baixa</th><th>Posição</th><th>Cliente / loja</th><th class="num">Recebimento real</th><th class="num">Títulos</th><th class="num">Atraso médio (dias)</th></tr></thead><tbody></tbody></table></div></article>
     <button class="recon-banner" id="reconBanner"><span class="icon-tile" data-icon="check"></span><span><strong>Conferência entre as bases</strong><span id="reconBannerText">Conferindo SE1 e SE5...</span></span><span class="recon-link">Consultar conferência <span data-icon="arrow"></span></span></button>
    </section>
 
@@ -80,22 +92,25 @@
    </section>
 
    <section id="metodo" class="tab-panel" hidden>
-    <div class="method-grid"><article class="card method-card"><span class="section-overline">REGRAS DO INDICADOR</span><h2>Como os valores são calculados</h2><dl><dt>Recebimento real</dt><dd>Juros + Vlr. Liq. Baixa, exatamente como solicitado. A soma é calculada em centavos para preservar os valores.</dd><dt>Percentual recebido</dt><dd>Soma do recebimento real ÷ soma do valor dos títulos no mesmo recorte. Na tabela, a divisão usa o valor da respectiva linha consolidada. Percentuais acima de 100% são preservados.</dd><dt>Títulos únicos</dt><dd>Filial de origem + prefixo + número do título + tipo + código do cliente + loja. O arquivo não contém uma coluna de parcela.</dd><dt>Grão da consolidação</dt><dd>Chave completa do título + data da baixa. Linhas da SE1 com a mesma chave e data são somadas, com os registros de origem disponíveis ao abrir a linha. A SE5 é agrupada antes da comparação, evitando multiplicar valores em cruzamentos.</dd><dt>Média, máximo e mínimo</dt><dd>Calculados por título único no recorte. A média inclui títulos com zero; o mínimo considera somente valores positivos. Cliente é agrupado pelo código + loja.</dd><dt>Clientes com recebimento zero</dt><dd>Usam somente títulos cujo recebimento é zero no recorte. Como todos têm recebimento igual a zero, a prioridade é definida pelo maior valor dos títulos. Isso não comprova, sozinho, inadimplência.</dd></dl></article>
-    <article class="card method-card"><span class="section-overline">LIMITES E CONFERÊNCIA</span><h2>O que observar na leitura</h2><div class="method-callout"><strong>Juros podem estar incluídos no valor líquido.</strong><p>Há registros em que o líquido da baixa já equivale ao título acrescido de juros. A fórmula solicitada soma os juros novamente. O painel mantém a regra e exibe também o líquido original para permitir a conferência.</p></div><dl><dt>Competência</dt><dd>O mês dos indicadores vem da data da baixa na SE1. Os nomes dos arquivos mencionam setembro, mas os dados incluem setembro e outubro de 2026. A aba de movimentos SE5 usa a data do movimento.</dd><dt>Carteira em aberto</dt><dd>A extração com “DT Baixa ≥ início do mês” pode excluir títulos nunca baixados. “Saldo informado” se refere à SE1 enviada e não representa a carteira completa. Para uma visão completa, exporte também títulos com saldo positivo, incluindo data da baixa em branco.</dd><dt>Validação SE5</dt><dd>O líquido da SE1 é comparado à soma assinada dos históricos “VALOR RECEBIDO S/ TITULO”, compensações identificadas e liquidações identificadas na mesma data. Tolerância: R$ 0,01. Linhas de juros não são somadas outra vez nessa comparação.</dd><dt>Exceções</dt><dd>Estornos ficam em revisão. Outros históricos geram ressalva. Sem correspondência exata na data, o painel não força o vínculo. Movimentos SE5 fora da SE1 ficam separados; nenhum valor substitui automaticamente a SE1.</dd><dt>Parcelas e repetições</dt><dd>Linhas iguais são preservadas, pois podem representar parcelas distintas. Sem número de parcela ou identificador do movimento não há base segura para eliminá-las. Use o detalhe de origem para validar.</dd></dl></article></div>
-    <article class="card sources-card"><div class="card-heading"><div><span class="section-overline">ORIGEM DOS DADOS</span><h2>Bases em uso</h2></div><button class="btn secondary" id="exportAll"><span data-icon="download"></span>Exportar base completa</button></div><div id="sourceInfo"></div><p class="footnote">Atualizações por CSV valem nesta sessão. Exporte a base consolidada para guardar os resultados. Ao reabrir o painel on-line, carregue novamente os CSVs atualizados.</p></article>
+    <div class="method-grid"><article class="card method-card"><span class="section-overline">REGRAS DO INDICADOR</span><h2>Como os valores são calculados</h2><dl><dt>Recebimento real</dt><dd>Juros + Vlr. Liq. Baixa, exatamente como solicitado. A soma é calculada em centavos para preservar os valores.</dd><dt>Percentual recebido</dt><dd>Soma do recebimento real ÷ soma do valor dos títulos no mesmo recorte. Na tabela, a divisão usa o valor da respectiva linha consolidada. Percentuais acima de 100% são preservados.</dd><dt>Títulos únicos</dt><dd>Filial de origem + prefixo + número do título + tipo + código do cliente + loja. O arquivo não contém uma coluna de parcela.</dd><dt>Grão da consolidação</dt><dd>Chave completa do título + data da baixa. Linhas da SE1 com a mesma chave e data são somadas, com os registros de origem disponíveis ao abrir a linha. A SE5 é agrupada antes da comparação, evitando multiplicar valores em cruzamentos.</dd><dt>Média, máximo e mínimo</dt><dd>Calculados por título único no recorte. A média inclui títulos com zero; o mínimo considera somente valores positivos. Cliente é agrupado pelo código + loja.</dd><dt>Melhores pagadores</dt><dd>Cliente + loja com todos os pagamentos positivos e sem saldo, até o respectivo vencimento real, no histórico conferido disponível. Qualquer pagamento em atraso, saldo pendente ou vencimento ausente impede essa classificação. O ranking soma o recebimento real do mês selecionado.</dd><dt>Ofensores recorrentes</dt><dd>Cliente + loja cujos pagamentos no histórico conferido disponível ocorreram sempre depois do vencimento acrescido de um mês de calendário. No fim do mês, o limite usa o último dia válido do mês seguinte. O limite exato não conta como atraso superior a um mês. O ranking mensal usa o mês da baixa e ordena o recebimento real do maior para o menor.</dd></dl></article>
+    <article class="card method-card"><span class="section-overline">LIMITES E CONFERÊNCIA</span><h2>O que observar na leitura</h2><div class="method-callout"><strong>Juros podem estar incluídos no valor líquido.</strong><p>Há registros em que o líquido da baixa já equivale ao título acrescido de juros. A fórmula solicitada soma os juros novamente. O painel mantém a regra e exibe também o líquido original para permitir a conferência.</p></div><dl><dt>Competência</dt><dd>O mês dos indicadores vem da data da baixa na SE1. Cada importação atualiza os meses encontrados nos arquivos e preserva os demais meses do histórico. A aba de movimentos SE5 usa a data do movimento.</dd><dt>Carteira em aberto</dt><dd>A extração com “DT Baixa ≥ início do mês” pode excluir títulos nunca baixados. “Saldo informado” se refere à SE1 enviada e não representa a carteira completa. Para uma visão completa, exporte também títulos com saldo positivo, incluindo data da baixa em branco.</dd><dt>Validação SE5</dt><dd>O líquido da SE1 é comparado à soma assinada dos históricos “VALOR RECEBIDO S/ TITULO”, compensações identificadas e liquidações identificadas na mesma data. Tolerância: R$ 0,01. Linhas de juros não são somadas outra vez nessa comparação.</dd><dt>Base considerada</dt><dd>Indicadores, rankings e exportação consolidada contêm somente Conferido e Conferido com ressalva. Divergências, estornos e registros sem correspondência permanecem na aba de conferência, fora da base consolidada.</dd><dt>De_para e ilhas</dt><dd>Nas abas cartões e intercompany, todas as linhas com Status = Desconsiderar são excluídas da SE1 e da SE5 pelo código do cliente + loja. O filtro Ilha usa a coluna Tipo do título (CC, CD, NF, FT e demais tipos presentes). As abas de nome fantasia e responsáveis não alteram essas exclusões.</dd><dt>Histórico e backup</dt><dd>Os meses ficam salvos neste navegador. Reimportar o mesmo mês substitui os dados desse mês nas duas bases e mantém os outros meses, sem somar a mesma extração novamente. O histórico não é compartilhado entre navegadores ou computadores; use Baixar backup do histórico e Restaurar backup para transferi-lo.</dd><dt>Parcelas e repetições</dt><dd>Linhas iguais são preservadas, pois podem representar parcelas distintas. Sem número de parcela ou identificador do movimento não há base segura para eliminá-las. Use o detalhe de origem para validar.</dd></dl></article></div>
+    <article class="card sources-card"><div class="card-heading"><div><span class="section-overline">ORIGEM DOS DADOS</span><h2>Bases em uso</h2></div><button class="btn secondary" id="exportAll"><span data-icon="download"></span>Exportar base completa</button></div><div id="sourceInfo"></div><p class="footnote">O histórico é salvo automaticamente neste navegador. Mantenha um backup para recuperar os meses caso troque de navegador, computador ou limpe os dados de navegação.</p></article>
    </section>
    <footer class="main-footer"><span>Desenvolvido por Anderson Prado © 2026</span><span>Dados do Protheus · valores em reais (R$)</span></footer>
   </div>
  </main>
 </div>
-<dialog id="uploadDialog"><div class="dialog-header"><div><span class="section-overline">ATUALIZAÇÃO DE DADOS</span><h2>Carregar as duas bases</h2></div><button class="icon-btn" data-close="uploadDialog" aria-label="Fechar">×</button></div><p class="dialog-intro">Exporte os CSVs do Protheus separados por ponto e vírgula, mantendo as colunas indicadas nas orientações.</p><label class="file-box"><span class="file-tag">SE1</span><strong>Contas a receber · reversão</strong><input type="file" id="fileSe1" accept=".csv,text/csv"><span id="fileSe1Name">Selecione o CSV da SE1</span></label><label class="file-box"><span class="file-tag">SE5</span><strong>Movimentação bancária · conferência</strong><input type="file" id="fileSe5" accept=".csv,text/csv"><span id="fileSe5Name">Selecione o CSV da SE5</span></label><p class="dialog-note">A atualização mantém o período selecionado quando ele existe na nova base. Na primeira importação, o painel usa o primeiro mês de baixa da SE1. Depois, exporte a base consolidada para consultas e tratativas.</p><div id="uploadError" class="error-message" role="alert" hidden></div><div class="dialog-actions"><button class="btn secondary" data-close="uploadDialog">Cancelar</button><button class="btn primary" id="loadFiles">Consolidar bases</button></div></dialog>
+<dialog id="uploadDialog"><div class="dialog-header"><div><span class="section-overline">ATUALIZAÇÃO DE DADOS</span><h2>Atualizar bases e histórico</h2></div><button class="icon-btn" data-close="uploadDialog" aria-label="Fechar">×</button></div><p class="dialog-intro">Exporte os CSVs do Protheus separados por ponto e vírgula, mantendo as colunas indicadas nas orientações.</p><label class="file-box"><span class="file-tag">SE1</span><strong>Contas a receber · reversão</strong><input type="file" id="fileSe1" accept=".csv,text/csv"><span id="fileSe1Name">Selecione o CSV da SE1</span></label><label class="file-box"><span class="file-tag">SE5</span><strong>Movimentação bancária · conferência</strong><input type="file" id="fileSe5" accept=".csv,text/csv"><span id="fileSe5Name">Selecione o CSV da SE5</span></label><label class="file-box"><span class="file-tag">DE_PARA</span><strong>Exclusões de cartões e intercompany</strong><input type="file" id="fileDepara" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"><span id="fileDeparaName">Selecione o De_para na primeira importação</span></label><p class="dialog-note" id="deparaState"></p><p class="dialog-note">Os meses presentes nos CSVs serão atualizados; os demais permanecem salvos. Envie a extração completa de cada mês. O mês selecionado é mantido quando disponível. Um novo De_para reaplica as exclusões a todo o histórico.</p><div id="uploadError" class="error-message" role="alert" hidden></div><div class="dialog-actions"><button class="btn secondary" data-close="uploadDialog">Cancelar</button><button class="btn primary" id="loadFiles">Consolidar bases</button></div></dialog>
 <dialog id="recordDialog" class="wide-dialog"><div class="dialog-header"><div><span class="section-overline">REGISTROS DE ORIGEM</span><h2 id="recordTitle">Detalhe do título</h2></div><button class="icon-btn" data-close="recordDialog" aria-label="Fechar">×</button></div><div id="recordBody"></div></dialog>
 <div id="toast" class="toast" role="status" hidden></div>
-<script id="dataset" type="application/json">{"se1":[["Prefixo","No. Titulo","Tipo","Cliente","Loja","Nome Cliente","DT Emissao","Vencto real","Vlr.Titulo","DT Baixa","Historico","Tp de Cobran","Saldo","Juros","Vlr.Liq Baix","Filial Orig"]],"se5":[["Filial","DT Movimen","Tipo Titulo","Vlr.Movim.","Vencimento","Beneficiario","Historico","Prefixo","Titulo","Cli/For","Loja","MOT BAIXA","Filial Orig","Valor juros","Fatura","Cliente"]],"files":{"se1":"Aguardando importação da SE1","se5":"Aguardando importação da SE5"},"created":"","publicMode":true}</script>
+<script id="dataset" type="application/json">{"se1":[["Prefixo","No. Titulo","Tipo","Cliente","Loja","Nome Cliente","DT Emissao","Vencto real","Vlr.Titulo","DT Baixa","Historico","Tp de Cobran","Saldo","Juros","Vlr.Liq Baix","Filial Orig"]],"se5":[["Filial","DT Movimen","Tipo Titulo","Vlr.Movim.","Vencimento","Beneficiario","Historico","Prefixo","Titulo","Cli/For","Loja","MOT BAIXA","Filial Orig","Valor juros","Fatura","Cliente"]],"files":{"se1":"Aguardando importação da SE1","se5":"Aguardando importação da SE5"},"created":"","schemaVersion":2,"depara":null,"snapshots":{},"publicMode":true}</script>
 <script>(function(global){
 'use strict';
 const norm=s=>String(s??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z0-9]/g,'');
 const clean=s=>String(s??'').trim();
+const id=s=>{const v=clean(s).toUpperCase();return /^\d+$/.test(v)?v.replace(/^0+(?=\d)/,''):v;};
+const clientKey=(client,store)=>id(client)+'|'+id(store);
+const approved=g=>g.recon==='matched'||g.recon==='caveat';
 const prefixes=['0101','0102','0104','0106','0180'];
 function cents(value){
  let s=clean(value); if(!s)return 0;
@@ -131,7 +146,7 @@ const specs={
  se1:{prefix:['Prefixo'],number:['No. Titulo'],type:['Tipo'],client:['Cliente'],store:['Loja'],name:['Nome Cliente'],issued:['DT Emissao'],due:['Vencto real'],face:['Vlr.Titulo'],paid:['DT Baixa'],history:['Historico'],charge:['Tp de Cobran','Tp. de Cobran'],balance:['Saldo'],interest:['Juros'],liquid:['Vlr.Liq Baix','Vlr. Liq Baixa'],branch:['Filial Orig','Filial Orig.']},
  se5:{branchLedger:['Filial'],date:['DT Movimen'],type:['Tipo Titulo'],value:['Vlr.Movim.'],due:['Vencimento'],name:['Beneficiario'],history:['Historico'],prefix:['Prefixo'],number:['Titulo'],client:['Cli/For'],store:['Loja'],reason:['MOT BAIXA','Mot Baixa'],branch:['Filial Orig','Filial Orig.'],interest:['Valor juros'],invoice:['Fatura'],client2:['Cliente']}
 };
-function extract(rows,kind){
+function extract(rows,kind,raw={}){
  const spec=specs[kind],hi=rows.findIndex(r=>r.some(c=>norm(c)==='PREFIXO')&&r.some(c=>norm(c)===(kind==='se1'?'NOTITULO':'TITULO')));
  if(hi<0)throw Error('Cabeçalho da '+kind.toUpperCase()+' não encontrado. Exporte CSV separado por ponto e vírgula.');
  const headers=rows[hi],pos={};
@@ -144,12 +159,15 @@ function extract(rows,kind){
   if(!rows[i].some(x=>clean(x)))continue;
   if(rows[i].length!==headers.length)throw Error(kind.toUpperCase()+': quantidade de colunas inválida na linha '+(i+1)+'.');
   const r={line:i+1}; for(const [field,p]of Object.entries(pos))r[field]=clean(rows[i][p]);
-  if(r.type!=='FT'||!prefixes.some(p=>r.branch.startsWith(p))){excluded.push(r);continue;}
+  r.type=r.type.toUpperCase();
+  if(!r.type||!prefixes.some(p=>r.branch.startsWith(p))){excluded.push(r);continue;}
   try{
    for(const field of kind==='se1'?['face','balance','interest','liquid']:['value','interest'])r[field]=cents(r[field]);
    for(const field of kind==='se1'?['issued','due','paid']:['date','due'])r[field]=iso(r[field]);
   }catch(e){throw Error(kind.toUpperCase()+', linha '+r.line+': '+e.message);}
-  r.key=[r.branch,r.prefix,r.number,r.type,r.client,r.store].join('|');
+  r.sourceFile=raw.provenance?.[kind]?.[i]?.file||raw.files?.[kind]||kind.toUpperCase();
+  r.sourceLine=raw.provenance?.[kind]?.[i]?.line||i+1;
+  r.key=[r.branch,r.prefix,r.number,r.type,id(r.client),id(r.store)].join('|');
   records.push(r);
  }
  return {records,excluded,sourceRows:rows.length-hi-1};
@@ -165,7 +183,10 @@ function category(r){
  return 'other';
 }
 function prepare(raw){
- const a=extract(raw.se1,'se1'),b=extract(raw.se5,'se5'),groups=new Map(),bank=new Map(),titleKeys=new Set(),aDates=new Set(),bKeys=new Set();
+ const a=extract(raw.se1,'se1',raw),b=extract(raw.se5,'se5',raw),groups=new Map(),bank=new Map(),titleKeys=new Set(),aDates=new Set(),bKeys=new Set();
+ const excludedClients=new Set((raw.depara?.excludedClients||[]).map(r=>clientKey(r.client,r.store)));
+ const removed1=a.records.filter(r=>excludedClients.has(clientKey(r.client,r.store))),removed5=b.records.filter(r=>excludedClients.has(clientKey(r.client,r.store)));
+ a.records=a.records.filter(r=>!excludedClients.has(clientKey(r.client,r.store)));b.records=b.records.filter(r=>!excludedClients.has(clientKey(r.client,r.store)));
  for(const r of b.records){r.category=category(r);r.join=r.key+'|'+r.date;if(!bank.has(r.join))bank.set(r.join,[]);bank.get(r.join).push(r);bKeys.add(r.key);}
  for(const r of a.records){
   r.join=r.key+'|'+r.paid;titleKeys.add(r.key);aDates.add(r.join);
@@ -181,16 +202,18 @@ function prepare(raw){
   g.delta=g.movements.length?g.liquid-g.comparable:null;
   g.recon=!g.movements.length?(bKeys.has(g.key)?'other_date':'missing'):g.counts.cancel?'cancellation':Math.abs(g.delta)<=1?(g.counts.other?'caveat':'matched'):'difference';
  }
- const sig=r=>JSON.stringify(Object.fromEntries(Object.entries(r).filter(([k])=>!['line','key','join','category'].includes(k))));
- return {raw,se1:a.records,se5:b.records,groups:[...groups.values()],unmatched:b.records.filter(r=>!aDates.has(r.join)),stats:{se1:a.records.length,se5:b.records.length,excluded1:a.excluded.length,excluded5:b.excluded.length,titles:titleKeys.size,duplicate1:a.records.length-new Set(a.records.map(sig)).size,duplicate5:b.records.length-new Set(b.records.map(sig)).size,multiple:[...groups.values()].filter(g=>g.parts.length>1).length,onlyBankKeys:new Set(b.records.filter(r=>!titleKeys.has(r.key)).map(r=>r.key)).size,onlySe1Keys:new Set(a.records.filter(r=>!bKeys.has(r.key)).map(r=>r.key)).size,blankPaid:a.records.filter(r=>!r.paid).length}};
+ const sig=r=>JSON.stringify(Object.fromEntries(Object.entries(r).filter(([k])=>!['line','key','join','category','sourceFile','sourceLine'].includes(k))));
+ const allGroups=[...groups.values()];
+ return {raw,se1:a.records,se5:b.records,allGroups,groups:allGroups.filter(approved),reviewGroups:allGroups.filter(g=>!approved(g)),unmatched:b.records.filter(r=>!aDates.has(r.join)),stats:{se1:a.records.length,se5:b.records.length,excluded1:a.excluded.length,excluded5:b.excluded.length,removed1:removed1.length,removed5:removed5.length,exclusionRules:excludedClients.size,titles:titleKeys.size,duplicate1:a.records.length-new Set(a.records.map(sig)).size,duplicate5:b.records.length-new Set(b.records.map(sig)).size,multiple:allGroups.filter(g=>g.parts.length>1).length,onlyBankKeys:new Set(b.records.filter(r=>!titleKeys.has(r.key)).map(r=>r.key)).size,onlySe1Keys:new Set(a.records.filter(r=>!bKeys.has(r.key)).map(r=>r.key)).size,blankPaid:a.records.filter(r=>!r.paid).length}};
 }
-function filterGroups(model,f){
+function filterGroups(model,f={},includeReview=false){
  const q=norm(f.query||'');
- return model.groups.filter(g=>{
+ return (includeReview?model.allGroups:model.groups).filter(g=>{
   if(f.month==='none'&&g.paid)return false;
   if(f.month&&f.month!=='all'&&f.month!=='none'&&!(f.basis==='due'?g.due.some(d=>d.startsWith(f.month)):g.paid.startsWith(f.month)))return false;
   if(f.branch&&g.branch!==f.branch)return false;
-  if(f.client&&g.client+'|'+g.store!==f.client)return false;
+  if(f.type&&g.type!==f.type)return false;
+  if(f.client&&clientKey(g.client,g.store)!==f.client)return false;
   if(q&&!norm([g.name,g.client,g.number,g.branch,g.prefix].join(' ')).includes(q))return false;
   if(f.status==='zero'&&g.real!==0)return false;
   if(f.status==='partial'&&!(g.real>0&&g.real<g.face))return false;
@@ -204,19 +227,198 @@ function summary(groups){
  for(const g of groups){face+=g.face;real+=g.real;balance+=g.balance;interest+=g.interest;liquid+=g.liquid;if(!t.has(g.key))t.set(g.key,{...g,face:0,real:0,balance:0});let z=t.get(g.key);z.face+=g.face;z.real+=g.real;z.balance+=g.balance;}
  const titles=[...t.values()],positive=titles.filter(g=>g.real>0).map(g=>g.real),clients=new Map(),offenders=new Map();
  for(const g of titles){let key=g.client+'|'+g.store;if(g.real>0){if(!clients.has(key))clients.set(key,{key,name:g.name,client:g.client,store:g.store,value:0,count:0});clients.get(key).value+=g.real;clients.get(key).count++;}if(g.real===0){if(!offenders.has(key))offenders.set(key,{key,name:g.name,client:g.client,store:g.store,value:0,balance:0,count:0});let c=offenders.get(key);c.value+=g.face;c.balance+=g.balance;c.count++;}}
- return {face,real,balance,interest,liquid,count:t.size,rows:groups.length,average:t.size?real/t.size:0,max:positive.length?Math.max(...positive):0,min:positive.length?Math.min(...positive):0,ratio:face?real/face:null,zero:titles.filter(x=>x.real===0).length,paid:titles.filter(x=>x.real>0).length,top:[...clients.values()].sort((a,b)=>b.value-a.value).slice(0,5),offenders:[...offenders.values()].sort((a,b)=>b.value-a.value).slice(0,5)};
+ return {face,real,balance,interest,liquid,count:t.size,rows:groups.length,average:t.size?real/t.size:0,max:positive.reduce((maximum,v)=>Math.max(maximum,v),0),min:positive.length?positive.reduce((minimum,v)=>Math.min(minimum,v),positive[0]):0,ratio:face?real/face:null,zero:titles.filter(x=>x.real===0).length,paid:titles.filter(x=>x.real>0).length,top:[...clients.values()].sort((a,b)=>b.value-a.value).slice(0,5),offenders:[...offenders.values()].sort((a,b)=>b.value-a.value).slice(0,5)};
 }
 const reconLabels={matched:'Conferido',caveat:'Conferido com ressalva',difference:'Divergência',cancellation:'Revisar estorno',other_date:'SE5 em outra data',missing:'Sem SE5'};
 function toCSV(headers,rows){
  const field=v=>{let s=String(v??'');if(/^[\s]*[=+@]/.test(s)||/^\s*-\D/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"';};
  return '\uFEFF'+[headers,...rows].map(r=>r.map(field).join(';')).join('\r\n');
 }
-function consolidatedCSV(rows){
+function consolidatedCSV(rows,{includeReview=false}={}){
+ if(!includeReview)rows=rows.filter(approved);
  const decimal=c=>(c/100).toFixed(2).replace('.',','),date=d=>d?d.slice(8)+'/'+d.slice(5,7)+'/'+d.slice(0,4):'',dateList=a=>a.map(date).join(' | '),uniq=a=>[...new Set(a)].filter(Boolean).join(' | ');
- const headers=['Chave Titulo','Filial Origem','Prefixo','No Titulo','Tipo','Cliente','Loja','Nome Cliente','Mes Baixa','DT Emissao','Vencto Real','DT Baixa','Vlr Titulo','Juros','Vlr Liq Baixa','Vlr Recebimento Real','Percentual Recebido','Saldo SE1','Recebimentos SE5 na data','Compensacoes SE5 na data','Liquidacoes SE5 na data','SE5 Comparavel','Diferenca Liquido SE1 - SE5','Conferencia','Qtd Linhas SE1','Linhas SE1','Qtd Movimentos SE5','Linhas SE5','Historico SE1','Tipo Cobranca SE1','Historicos SE5','Motivos Baixa SE5'];
- return toCSV(headers,rows.map(g=>[g.key,g.branch,g.prefix,g.number,g.type,g.client,g.store,g.name,g.paid?g.paid.slice(0,7):'',dateList(g.issued),dateList(g.due),date(g.paid),decimal(g.face),decimal(g.interest),decimal(g.liquid),decimal(g.real),g.ratio===null?'':(g.ratio*100).toFixed(6).replace('.',',')+'%',decimal(g.balance),g.movements.length?decimal(g.bank.receipt):'',g.movements.length?decimal(g.bank.comp):'',g.movements.length?decimal(g.bank.settlement):'',g.movements.length?decimal(g.comparable):'',g.delta===null?'':decimal(g.delta),reconLabels[g.recon],g.parts.length,g.parts.map(r=>r.line).join(' | '),g.movements.length,g.movements.map(r=>r.line).join(' | '),uniq(g.parts.map(r=>r.history)),uniq(g.parts.map(r=>r.charge)),uniq(g.movements.map(r=>r.history)),uniq(g.movements.map(r=>r.reason))]));
+ const headers=['Chave Titulo','Filial Origem','Prefixo','No Titulo','Tipo','Cliente','Loja','Nome Cliente','Mes Baixa','DT Emissao','Vencto Real','DT Baixa','Vlr Titulo','Juros','Vlr Liq Baixa','Vlr Recebimento Real','Percentual Recebido','Saldo SE1','Recebimentos SE5 na data','Compensacoes SE5 na data','Liquidacoes SE5 na data','SE5 Comparavel','Diferenca Liquido SE1 - SE5','Conferencia','Qtd Linhas SE1','Linhas SE1','Qtd Movimentos SE5','Linhas SE5','Historico SE1','Tipo Cobranca SE1','Historicos SE5','Motivos Baixa SE5','Arquivos SE1','Arquivos SE5'];
+ return toCSV(headers,rows.map(g=>[g.key,g.branch,g.prefix,g.number,g.type,g.client,g.store,g.name,g.paid?g.paid.slice(0,7):'',dateList(g.issued),dateList(g.due),date(g.paid),decimal(g.face),decimal(g.interest),decimal(g.liquid),decimal(g.real),g.ratio===null?'':(g.ratio*100).toFixed(6).replace('.',',')+'%',decimal(g.balance),g.movements.length?decimal(g.bank.receipt):'',g.movements.length?decimal(g.bank.comp):'',g.movements.length?decimal(g.bank.settlement):'',g.movements.length?decimal(g.comparable):'',g.delta===null?'':decimal(g.delta),reconLabels[g.recon],g.parts.length,g.parts.map(r=>r.sourceLine||r.line).join(' | '),g.movements.length,g.movements.map(r=>r.sourceLine||r.line).join(' | '),uniq(g.parts.map(r=>r.history)),uniq(g.parts.map(r=>r.charge)),uniq(g.movements.map(r=>r.history)),uniq(g.movements.map(r=>r.reason)),uniq(g.parts.map(r=>r.sourceFile)),uniq(g.movements.map(r=>r.sourceFile))]));
 }
-global.RecebiveisEngine={norm,clean,cents,iso,parseCSV,extract,prepare,filterGroups,summary,reconLabels,toCSV,consolidatedCSV};
+global.RecebiveisEngine={norm,clean,id,clientKey,approved,cents,iso,parseCSV,extract,prepare,filterGroups,summary,reconLabels,toCSV,consolidatedCSV,specs};
+})(globalThis);
+</script>
+<script>(function(global){
+'use strict';
+const E=global.RecebiveisEngine;
+function canonical(raw,kind){
+ const rows=raw[kind],fields=Object.entries(E.specs[kind]);
+ if(!Array.isArray(rows))throw Error('O histórico não contém a base '+kind.toUpperCase()+'.');
+ const hi=rows.findIndex(r=>Array.isArray(r)&&r.some(c=>E.norm(c)==='PREFIXO')&&r.some(c=>E.norm(c)===(kind==='se1'?'NOTITULO':'TITULO')));
+ if(hi<0)throw Error('Cabeçalho '+kind.toUpperCase()+' ausente no histórico.');
+ const positions=fields.map(([,aliases])=>rows[hi].findIndex(c=>aliases.some(a=>E.norm(a)===E.norm(c))));
+ if(positions.some(p=>p<0))throw Error('Colunas obrigatórias ausentes na '+kind.toUpperCase()+'.');
+ const dateIndex=fields.findIndex(([key])=>key===(kind==='se1'?'paid':'date'));
+ const result=[];
+ for(let i=hi+1;i<rows.length;i++){
+  if(!Array.isArray(rows[i]))throw Error('Linha inválida no histórico '+kind.toUpperCase()+'.');
+  if(!rows[i].some(v=>E.clean(v)))continue;
+  if(rows[i].length!==rows[hi].length)throw Error('Quantidade de colunas inválida na '+kind.toUpperCase()+', linha '+(i+1)+'.');
+  const row=positions.map(p=>E.clean(rows[i][p])),date=E.iso(row[dateIndex]);
+  result.push({row,month:date?date.slice(0,7):'none',origin:raw.provenance?.[kind]?.[i]||{file:raw.files?.[kind]||kind.toUpperCase(),line:i+1}});
+ }
+ return {headers:fields.map(([,aliases])=>aliases[0]),rows:result};
+}
+function mergeRaw(current,incoming,{preferNewest=false}={}){
+ const a={se1:canonical(current,'se1'),se5:canonical(current,'se5')},b={se1:canonical(incoming,'se1'),se5:canonical(incoming,'se5')};
+ const touched=new Set([...b.se1.rows,...b.se5.rows].map(r=>r.month));
+ const snapshots={...current.snapshots},incomingSnapshots=incoming.snapshots||{};
+ const selected=new Set([...touched].filter(month=>!preferNewest||!snapshots[month]||(incomingSnapshots[month]?.updatedAt||incoming.updatedAt||incoming.created||'')>=(snapshots[month]?.updatedAt||current.updatedAt||current.created||'')));
+ const next={schemaVersion:2,created:incoming.created||current.created,updatedAt:incoming.updatedAt||current.updatedAt,files:{...current.files,...incoming.files},provenance:{},snapshots,depara:current.depara||incoming.depara||null};
+ if(incoming.depara&&(!preferNewest||!current.depara||(incoming.depara.updatedAt||incoming.depara.created||'')>=(current.depara.updatedAt||current.depara.created||'')))next.depara=incoming.depara;
+ for(const kind of ['se1','se5']){
+  const joined=[...a[kind].rows.filter(r=>!selected.has(r.month)),...b[kind].rows.filter(r=>selected.has(r.month))];
+  joined.sort((x,y)=>x.month.localeCompare(y.month));
+  next[kind]=[a[kind].headers,...joined.map(r=>r.row)];next.provenance[kind]=[null,...joined.map(r=>r.origin)];
+ }
+ for(const month of new Set([...a.se1.rows,...a.se5.rows].map(r=>r.month)))if(!snapshots[month])snapshots[month]={month,updatedAt:current.updatedAt||current.created||'',files:current.files};
+ for(const month of selected)snapshots[month]=incomingSnapshots[month]||{month,updatedAt:incoming.updatedAt||incoming.created||'',files:incoming.files};
+ return next;
+}
+function emptyRaw(raw){return {...raw,se1:[canonical(raw,'se1').headers],se5:[canonical(raw,'se5').headers],snapshots:{},provenance:{se1:[null],se5:[null]}};}
+let dbPromise;
+function open(){
+ if(!global.indexedDB)return Promise.reject(Error('O navegador não permite salvar o histórico.'));
+ if(!dbPromise)dbPromise=new Promise((resolve,reject)=>{
+  const request=indexedDB.open('recebiveis-anderson-historico',1);
+  request.onupgradeneeded=()=>request.result.createObjectStore('datasets');
+  request.onsuccess=()=>{const db=request.result;db.onversionchange=()=>{db.close();dbPromise=null;};resolve(db);};
+  request.onerror=()=>{dbPromise=null;reject(request.error);};
+  request.onblocked=()=>{dbPromise=null;reject(Error('Feche outras abas antigas do painel para salvar o histórico.'));};
+ });
+ return dbPromise;
+}
+async function load(){
+ const db=await open();return new Promise((resolve,reject)=>{const tx=db.transaction('datasets','readonly'),r=tx.objectStore('datasets').get('current');r.onsuccess=()=>resolve(r.result||null);r.onerror=()=>reject(r.error);});
+}
+async function save(raw){
+ const db=await open();return new Promise((resolve,reject)=>{
+  const tx=db.transaction('datasets','readwrite'),store=tx.objectStore('datasets'),r=store.get('current');let committed;
+  r.onsuccess=()=>{try{committed=r.result?mergeRaw(r.result,raw,{preferNewest:true}):raw;store.put(committed,'current');}catch(e){tx.abort();reject(e);}};
+  tx.oncomplete=()=>resolve(committed);tx.onerror=()=>reject(tx.error||Error('Não foi possível gravar o histórico.'));tx.onabort=()=>reject(tx.error||Error('O salvamento do histórico foi cancelado.'));
+ });
+}
+E.mergeRaw=mergeRaw;E.emptyRaw=emptyRaw;E.canonical=canonical;
+global.RecebiveisHistory={load,save};
+})(globalThis);
+</script>
+<script>(function(global){
+'use strict';
+const E=global.RecebiveisEngine;
+function nextMonth(date){
+ const [y,m,d]=date.split('-').map(Number),first=new Date(Date.UTC(y,m,1)),last=new Date(Date.UTC(y,m+1,0)).getUTCDate();
+ return first.getUTCFullYear()+'-'+String(first.getUTCMonth()+1).padStart(2,'0')+'-'+String(Math.min(d,last)).padStart(2,'0');
+}
+const daysLate=(paid,due)=>Math.round((Date.parse(paid+'T00:00:00Z')-Date.parse(due+'T00:00:00Z'))/86400000);
+function paymentRankings(model,f={}){
+ const history=E.filterGroups(model,{branch:f.branch,type:f.type}),clients=new Map();
+ for(const g of history){
+  const key=E.clientKey(g.client,g.store);if(!clients.has(key))clients.set(key,{timely:true,late:true,keys:new Set(),months:new Set()});
+  const c=clients.get(key);c.keys.add(g.key);if(g.paid)c.months.add(g.paid.slice(0,7));
+  for(const r of g.parts){
+   const received=r.liquid+r.interest>0&&r.liquid>0&&r.paid&&r.due;
+   c.timely=Boolean(c.timely&&received&&r.balance<=0&&r.paid<=r.due);
+   c.late=Boolean(c.late&&received&&r.paid>nextMonth(r.due));
+  }
+ }
+ function ranked(rows,flag){
+  const values=new Map();
+  for(const g of rows){
+   const key=E.clientKey(g.client,g.store),historyClient=clients.get(key);if(!historyClient?.[flag]||g.real<=0)continue;
+   if(!values.has(key))values.set(key,{key,name:g.name,client:g.client,store:g.store,value:0,count:0,keys:new Set(),delaySum:0,delayParts:0,maxDelay:0,historyCount:historyClient.keys.size,historyMonths:historyClient.months.size});
+   const r=values.get(key);r.value+=g.real;r.keys.add(g.key);
+   for(const part of g.parts){if(part.paid&&part.due){const delay=Math.max(0,daysLate(part.paid,part.due));r.delaySum+=delay;r.delayParts++;r.maxDelay=Math.max(r.maxDelay,delay);}}
+  }
+  return [...values.values()].map(r=>({...r,count:r.keys.size,averageDelay:r.delayParts?r.delaySum/r.delayParts:0})).sort((a,b)=>b.value-a.value||a.key.localeCompare(b.key)).slice(0,5);
+ }
+ const rows=E.filterGroups(model,f),months=[...new Set([...history.filter(g=>g.paid).map(g=>g.paid.slice(0,7)),...Object.keys(model.raw?.snapshots||{}).filter(m=>/^\d{4}-\d{2}$/.test(m))])].sort();
+ return {top:ranked(rows,'timely'),offenders:ranked(rows,'late'),monthly:months.map(month=>({month,rows:ranked(E.filterGroups(model,{...f,month}),'late')})),months};
+}
+E.nextMonth=nextMonth;E.daysLate=daysLate;E.paymentRankings=paymentRankings;
+})(globalThis);
+</script>
+<script>(function(global){
+'use strict';
+const E=global.RecebiveisEngine,decoder=new TextDecoder('utf-8');
+const xml=s=>String(s).replace(/&(#x[0-9a-f]+|#\d+|amp|lt|gt|quot|apos);/gi,(_,v)=>v[0]==='#'?String.fromCodePoint(v[1]?.toLowerCase()==='x'?parseInt(v.slice(2),16):parseInt(v.slice(1),10)):({amp:'&',lt:'<',gt:'>',quot:'"',apos:"'"})[v.toLowerCase()]);
+const attributes=s=>Object.fromEntries([...s.matchAll(/([\w:.-]+)\s*=\s*(?:"([^"]*)"|'([^']*)')/g)].map(m=>[m[1],xml(m[2]??m[3])]));
+const texts=s=>[...s.matchAll(/<(?:\w+:)?t(?:\s[^>]*)?>([\s\S]*?)<\/(?:\w+:)?t>/g)].map(m=>xml(m[1])).join('');
+function zip(bytes){
+ const view=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength);let end=-1;
+ for(let i=bytes.length-22;i>=Math.max(0,bytes.length-65557);i--)if(view.getUint32(i,true)===0x06054b50&&i+22+view.getUint16(i+20,true)===bytes.length){end=i;break;}
+ if(end<0)throw Error('O De_para precisa ser um arquivo XLSX válido.');
+ const entries=new Map(),count=view.getUint16(end+10,true);let at=view.getUint32(end+16,true);
+ for(let i=0;i<count;i++){
+  if(at+46>bytes.length||view.getUint32(at,true)!==0x02014b50)throw Error('Estrutura XLSX inválida.');
+  const nameLength=view.getUint16(at+28,true),extra=view.getUint16(at+30,true),comment=view.getUint16(at+32,true),name=decoder.decode(bytes.subarray(at+46,at+46+nameLength));
+  entries.set(name,{method:view.getUint16(at+10,true),size:view.getUint32(at+20,true),uncompressed:view.getUint32(at+24,true),offset:view.getUint32(at+42,true),encrypted:view.getUint16(at+8,true)&1});
+  at+=46+nameLength+extra+comment;
+ }
+ return async function read(name){
+  const entry=entries.get(name);if(!entry)throw Error('Parte ausente no XLSX: '+name);
+  if(entry.encrypted||entry.uncompressed>160000000)throw Error('Arquivo XLSX protegido ou acima do limite de leitura.');
+  const at=entry.offset;if(view.getUint32(at,true)!==0x04034b50)throw Error('Conteúdo XLSX inválido.');
+  const start=at+30+view.getUint16(at+26,true)+view.getUint16(at+28,true),compressed=bytes.subarray(start,start+entry.size);let output;
+  if(entry.method===0)output=compressed;
+  else if(entry.method===8){
+   if(!global.DecompressionStream)throw Error('Atualize o navegador para ler o arquivo XLSX.');
+   output=new Uint8Array(await new Response(new Blob([compressed]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer());
+  }else throw Error('Compressão XLSX não suportada.');
+  if(output.length!==entry.uncompressed)throw Error('A leitura do XLSX ficou incompleta.');
+  return decoder.decode(output);
+ };
+}
+function cellRows(sheet){
+ const rows=[];
+ for(const rowMatch of sheet.matchAll(/<(?:\w+:)?row\b([^>]*)>([\s\S]*?)<\/(?:\w+:)?row>/g)){
+  const row=[];row.sourceLine=Number(attributes(rowMatch[1]).r)||rows.length+1;
+  for(const cellMatch of rowMatch[2].matchAll(/<(?:\w+:)?c\b([^>]*?)(?:\/>|>([\s\S]*?)<\/(?:\w+:)?c>)/g)){
+   const attrs=attributes(cellMatch[1]),body=cellMatch[2]||'',letters=attrs.r?.match(/^[A-Z]+/i)?.[0];if(!letters)continue;
+   let col=0;for(const ch of letters.toUpperCase())col=col*26+ch.charCodeAt(0)-64;
+   const v=body.match(/<(?:\w+:)?v(?:\s[^>]*)?>([\s\S]*?)<\/(?:\w+:)?v>/)?.[1]||'';
+   row[col-1]=attrs.t==='s'?{shared:Number(v)}:attrs.t==='inlineStr'?texts(body):xml(v);
+  }
+  rows.push(row);
+ }
+ return rows;
+}
+async function readDepara(file){
+ const bytes=new Uint8Array(await file.arrayBuffer()),read=zip(bytes),workbook=await read('xl/workbook.xml'),rels=await read('xl/_rels/workbook.xml.rels');
+ const targets=new Map([...rels.matchAll(/<(?:\w+:)?Relationship\b([^>]*?)\/?\s*>/g)].map(m=>{const a=attributes(m[1]);return [a.Id,a.Target];}));
+ const wanted=new Map();
+ for(const m of workbook.matchAll(/<(?:\w+:)?sheet\b([^>]*?)\/?\s*>/g)){
+  const a=attributes(m[1]),name=E.norm(a.name);if(!['CARTOES','INTERCOMPANY'].includes(name))continue;
+  const target=targets.get(a['r:id']);if(!target)throw Error('Referência de aba inválida no De_para.');
+  const path=target.startsWith('/')?target.slice(1):'xl/'+target.replace(/^\.\//,'');
+  wanted.set(name,{name:a.name,rows:cellRows(await read(path))});
+ }
+ if(wanted.size!==2)throw Error('O De_para deve conter as abas cartões e intercompany.');
+ const required=new Set();for(const sheet of wanted.values())for(const row of sheet.rows)for(const cell of row)if(cell&&typeof cell==='object')required.add(cell.shared);
+ const strings=new Map();
+ if(required.size){
+  const shared=await read('xl/sharedStrings.xml');let i=0;
+  for(const match of shared.matchAll(/<(?:\w+:)?si\b[^>]*>([\s\S]*?)<\/(?:\w+:)?si>/g)){if(required.has(i))strings.set(i,texts(match[1]));i++;}
+  if([...required].some(k=>!strings.has(k)))throw Error('Texto ausente na tabela De_para.');
+ }
+ const excludedClients=[];
+ for(const {name,rows}of wanted.values()){
+  const decoded=rows.map(r=>{const values=r.map(c=>c&&typeof c==='object'?strings.get(c.shared):c);values.sourceLine=r.sourceLine;return values;});
+  const hi=decoded.findIndex(r=>r.some(c=>E.norm(c)==='CLIENTE')&&r.some(c=>E.norm(c)==='STATUS'));if(hi<0)throw Error('Cabeçalho Cliente / Loja / Status ausente na aba '+name+'.');
+  const headers=decoded[hi],client=headers.findIndex(c=>E.norm(c)==='CLIENTE'),store=headers.findIndex(c=>E.norm(c)==='LOJA'),status=headers.findIndex(c=>E.norm(c)==='STATUS');
+  if(store<0)throw Error('Coluna Loja ausente na aba '+name+'.');
+  for(const row of decoded.slice(hi+1))if(E.norm(row[status])==='DESCONSIDERAR'){
+   if(!E.clean(row[client])||!E.clean(row[store]))throw Error('Cliente ou loja vazios na aba '+name+', linha '+row.sourceLine+'.');
+   excludedClients.push({client:E.clean(row[client]),store:E.clean(row[store]),source:name,line:row.sourceLine});
+  }
+ }
+ return {file:file.name,excludedClients,updatedAt:new Date().toISOString(),created:new Date().toISOString().slice(0,10)};
+}
+global.RecebiveisDepara={read:readDepara};
 })(globalThis);
 </script>
 <script>(function(){
@@ -227,19 +429,21 @@ const monthLabel=s=>s==='all'?'Todo o período':s==='none'?'Sem data da baixa':n
 const dateList=a=>!a.length?'—':a.length===1?date(a[0]):a.map(date).join(' · ');
 const paths={dashboard:'<rect x="3" y="3" width="7" height="7" rx="1.4"/><rect x="14" y="3" width="7" height="7" rx="1.4"/><rect x="3" y="14" width="7" height="7" rx="1.4"/><rect x="14" y="14" width="7" height="7" rx="1.4"/>',table:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 10v10M15 10v10"/>',check:'<path d="M20 11.5V5l-8-3-8 3v7c0 5 8 9 8 9s4-2 6-5"/><path d="m9 11 3 3 8-8"/>',book:'<path d="M12 5c-3-2-6-2-9-1v15c3-1 6-1 9 1 3-2 6-2 9-1V4c-3-1-6-1-9 1Zm0 0v15"/>',layers:'<path d="m12 3 10 5-10 5L2 8l10-5Zm-9 9 9 5 9-5M3 16l9 5 9-5"/>',upload:'<path d="M12 16V3m-5 5 5-5 5 5M4 15v5a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5"/>',download:'<path d="M12 3v13m-5-5 5 5 5-5M4 16v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/>',search:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/>',reset:'<path d="M3 10a9 9 0 1 1 1 8M3 4v6h6"/>',info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7v.1"/>',wallet:'<path d="M20 7H5a2 2 0 0 1 0-4h13v4M3 5v14a2 2 0 0 0 2 2h15V7M20 11h-6v6h6M16 14h.1"/>',document:'<path d="M14 2H5v20h14V7l-5-5Zm0 0v5h5M8 12h8M8 16h5"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',up:'<path d="M12 21V3m-6 6 6-6 6 6"/>',down:'<path d="M12 3v18m-6-6 6 6 6-6"/>',arrow:'<path d="M4 12h16m-6-6 6 6-6 6"/>'};
 function icons(root=document){root.querySelectorAll('[data-icon]').forEach(el=>el.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(paths[el.dataset.icon]||paths.document)+'</svg>');}
-let raw,model,filtered=[],metrics,tab='executiva',page=1,reconPage=1,sort={key:'real',dir:-1},clientDrill='',toastTimer;
+let raw,model,filtered=[],metrics,tab='executiva',page=1,reconPage=1,sort={key:'real',dir:-1},clientDrill='',toastTimer,historySaved=false;
 const titles={executiva:['Visão de recebíveis','Acompanhe os títulos, os valores recebidos e o saldo informado.'],detalhamento:['Detalhamento dos títulos','Consulte a base consolidada e abra cada título para conferir a origem.'],conferencia:['Conferência das bases','Compare valores e investigue as diferenças entre SE1 e SE5.'],metodo:['Critérios e bases','Entenda as regras de cálculo, o alcance e a origem dos dados.']};
-function filters(){return {month:$('monthFilter').value,branch:$('branchFilter').value,status:$('statusFilter').value,query:$('queryFilter').value,client:clientDrill};}
+function filters(){return {month:$('monthFilter').value,type:$('typeFilter').value,branch:$('branchFilter').value,status:$('statusFilter').value,query:$('queryFilter').value,client:clientDrill};}
 function options(previousMonth=''){
  const se1Months=[...new Set(model.se1.filter(r=>r.paid).map(r=>r.paid.slice(0,7)))].sort();
- const months=[...new Set([...se1Months,...model.se5.filter(r=>r.date).map(r=>r.date.slice(0,7))])].sort();
- const oldBranch=$('branchFilter').value;
+ const months=[...new Set([...se1Months,...model.se5.filter(r=>r.date).map(r=>r.date.slice(0,7)),...Object.keys(raw.snapshots||{}).filter(m=>m!=='none')])].sort();
+ const oldBranch=$('branchFilter').value,oldType=$('typeFilter').value;
  $('monthFilter').innerHTML=months.map(m=>'<option value="'+m+'">'+monthLabel(m)+'</option>').join('')+'<option value="all">Todo o período</option>'+(model.stats.blankPaid?'<option value="none">Sem data da baixa</option>':'');
  const keepMonth=months.includes(previousMonth)||previousMonth==='all'||previousMonth==='none'&&model.stats.blankPaid;
  $('monthFilter').value=keepMonth?previousMonth:(se1Months[0]||(model.stats.blankPaid?'none':months[0]||'all'));
  const branches=[...new Set([...model.se1.map(r=>r.branch),...model.se5.map(r=>r.branch)])].sort();
  $('branchFilter').innerHTML='<option value="">Todas as filiais</option>'+branches.map(b=>'<option>'+esc(b)+'</option>').join('');
  $('branchFilter').value=branches.includes(oldBranch)?oldBranch:'';
+ const types=[...new Set(['CC','CD','NF','FT',...model.se1.map(r=>r.type),...model.se5.map(r=>r.type)])].sort();
+ $('typeFilter').innerHTML='<option value="">Todas as ilhas</option>'+types.map(t=>'<option value="'+esc(t)+'">'+esc(t)+'</option>').join('');$('typeFilter').value=types.includes(oldType)?oldType:'';
  $('reconStatus').innerHTML='<option value="">Todos os resultados</option>'+Object.entries(E.reconLabels).map(([v,l])=>'<option value="'+v+'">'+esc(l)+'</option>').join('');
  $('loadedDate').textContent=date(raw.created);
 }
@@ -253,8 +457,9 @@ function setTab(next){
  render();
 }
 function render(){
- $('publicWelcome').hidden=model.se1.length>0;
+ if($('publicWelcome'))$('publicWelcome').hidden=Object.keys(raw.snapshots||{}).length>0;
  const f=filters();filtered=E.filterGroups(model,f);metrics=E.summary(filtered);
+ renderHistoryStatus();
  $('periodLabel').textContent=monthLabel(f.month);$('contextCount').textContent='· '+num(metrics.count)+' títulos únicos · '+num(filtered.length)+' registros consolidados';
  $('drillClear').hidden=!clientDrill;
  $('dateScope').textContent=tab==='conferencia'&&$('reconView').value==='unmatched'?'SE5 sem SE1: competência pelo movimento':'Referência: data da baixa na SE1';
@@ -270,10 +475,10 @@ function renderExecutive(){
  $('paidCount').textContent=num(m.paid);$('zeroCount').textContent=num(m.zero);let pr=m.count?m.paid/m.count:0;
  $('donut').style.background='conic-gradient(#234c9c '+pr*360+'deg,#e7edf7 '+pr*360+'deg)';
  $('donutPercent').textContent=new Intl.NumberFormat('pt-BR',{style:'percent',minimumFractionDigits:1,maximumFractionDigits:1}).format(pr);
- $('interestNote').textContent='Juros SE1: '+money(m.interest);dailyChart();rank('topPayers',m.top);rank('topOffenders',m.offenders,true);
- const statuses={};for(const g of filtered)statuses[g.recon]=(statuses[g.recon]||0)+1;
- const matched=statuses.matched||0,needs=filtered.length-matched;
- $('reconBannerText').textContent=num(matched)+' registros conferidos sem ressalva · '+num(needs)+' para consulta ou revisão';
+ const rankings=E.paymentRankings(model,filters());
+ $('interestNote').textContent='Juros SE1: '+money(m.interest);dailyChart();rank('topPayers',rankings.top);rank('topOffenders',rankings.offenders,true);renderMonthlyOffenders(rankings.monthly);
+ const review=E.filterGroups(model,filters(),true).filter(g=>!E.approved(g));
+ $('reconBannerText').textContent=num(filtered.length)+' registros na base conferida · '+num(review.length)+' fora dos indicadores para revisão';
 }
 function dailyChart(){
  const map=new Map();for(const g of filtered){if(g.paid)map.set(g.paid,(map.get(g.paid)||0)+g.real);}
@@ -291,7 +496,10 @@ function dailyChart(){
 function rank(id,rows,off=false){
  if(!rows.length){$(id).innerHTML='<div class="empty-state">Nenhum cliente neste critério.</div>';return;}
  const max=rows[0].value||1;
- $(id).innerHTML=rows.map((r,i)=>'<button class="ranking-item" data-client="'+esc(r.key)+'" data-off="'+off+'" title="Consultar '+esc(r.name)+'"><span class="ranking-rank">'+(i+1)+'</span><span><span class="ranking-name">'+esc(r.name)+'</span><span class="ranking-client">'+esc(r.client)+' / '+esc(r.store)+' · '+num(r.count)+' título'+(r.count===1?'':'s')+'</span><span class="ranking-bar"><i style="width:'+r.value/max*100+'%"></i></span></span><span class="ranking-amount">'+money(r.value)+'</span></button>').join('');
+ $(id).innerHTML=rows.map((r,i)=>'<button class="ranking-item" data-client="'+esc(r.key)+'" title="Consultar '+esc(r.name)+'"><span class="ranking-rank">'+(i+1)+'</span><span><span class="ranking-name">'+esc(r.name)+'</span><span class="ranking-client">'+esc(r.client)+' / '+esc(r.store)+' · '+num(r.count)+' título'+(r.count===1?'':'s')+' no período</span><span class="ranking-client">Histórico: '+num(r.historyCount)+' título'+(r.historyCount===1?'':'s')+' em '+num(r.historyMonths)+' '+(r.historyMonths===1?'mês':'meses')+(off?' · atraso médio '+num(Math.round(r.averageDelay))+' dias':' · todos no prazo')+'</span><span class="ranking-bar"><i style="width:'+r.value/max*100+'%"></i></span></span><span class="ranking-amount">'+money(r.value)+'</span></button>').join('');
+}
+function renderMonthlyOffenders(months){
+ $('monthlyOffendersTable').tBodies[0].innerHTML=months.length?months.map(({month,rows})=>rows.length?rows.map((r,i)=>'<tr><td>'+esc(monthLabel(month))+'</td><td>'+(i+1)+'º</td><td><button class="client-button" data-client="'+esc(r.key)+'" data-month="'+month+'">'+esc(r.name)+'<small>'+esc(r.client)+' / '+esc(r.store)+'</small></button></td><td class="num">'+money(r.value)+'</td><td class="num">'+num(r.count)+'</td><td class="num">'+num(Math.round(r.averageDelay))+'</td></tr>').join(''):'<tr><td>'+esc(monthLabel(month))+'</td><td colspan="5" class="empty-state">Nenhum cliente atende ao critério de atraso recorrente neste mês.</td></tr>').join(''):'<tr><td colspan="6" class="empty-state">Importe as bases para consultar os meses.</td></tr>';
 }
 function ratioTag(g){return '<span class="ratio-tag '+(g.real===0?'zero':g.ratio>1?'above':'')+'">'+pct(g.ratio)+'</span>';}
 function statusTag(g){return '<span class="status-tag '+(['caveat','cancellation'].includes(g.recon)?'review':g.recon==='difference'?'difference':['missing','other_date'].includes(g.recon)?'missing':'')+'">'+E.reconLabels[g.recon]+'</span>';}
@@ -308,10 +516,10 @@ function renderDetail(){
  $('pageInfo').textContent=total?num((page-1)*size+1)+'–'+num(Math.min(page*size,total))+' de '+num(total)+' registros · página '+page+' de '+Math.ceil(total/size):'0 registros';
  $('prevPage').disabled=page===1;$('nextPage').disabled=page*size>=total;
 }
-function unmatchedRows(){let f=filters(),q=E.norm(f.query);return model.unmatched.filter(r=>(!f.month||f.month==='all'||f.month==='none'&&!r.date||r.date.startsWith(f.month))&&(!f.branch||r.branch===f.branch)&&(!f.client||r.client+'|'+r.store===f.client)&&(!q||E.norm([r.name,r.client,r.number,r.branch].join(' ')).includes(q)));}
-function reconRows(){const stat=$('reconStatus').value;return filtered.filter(g=>!stat||g.recon===stat).sort((a,b)=>Math.abs(b.delta||0)-Math.abs(a.delta||0));}
+function unmatchedRows(){let f=filters(),q=E.norm(f.query);return model.unmatched.filter(r=>(!f.month||f.month==='all'||f.month==='none'&&!r.date||r.date.startsWith(f.month))&&(!f.branch||r.branch===f.branch)&&(!f.type||r.type===f.type)&&(!f.client||E.clientKey(r.client,r.store)===f.client)&&(!q||E.norm([r.name,r.client,r.number,r.branch].join(' ')).includes(q)));}
+function reconRows(){const stat=$('reconStatus').value;return E.filterGroups(model,filters(),true).filter(g=>!stat||g.recon===stat).sort((a,b)=>Math.abs(b.delta||0)-Math.abs(a.delta||0));}
 function renderRecon(){
- const counts={};for(const g of filtered)counts[g.recon]=(counts[g.recon]||0)+1;
+ const counts={};for(const g of E.filterGroups(model,filters(),true))counts[g.recon]=(counts[g.recon]||0)+1;
  const cards=[['Conferidos sem ressalva',counts.matched||0,'Comparação exata, tolerância R$ 0,01'],['Divergências',counts.difference||0,'Diferença entre os valores comparáveis'],['Com ressalva / estorno',(counts.caveat||0)+(counts.cancellation||0),'Históricos que precisam de revisão'],['Sem SE5 na mesma data',(counts.missing||0)+(counts.other_date||0),'Correspondência exata não encontrada']];
  $('reconKpis').innerHTML=cards.map(([l,n,s])=>'<article class="recon-kpi"><span>'+l+'</span><strong>'+num(n)+'</strong><p>'+s+'</p></article>').join('');
  const unmatched=$('reconView').value==='unmatched';$('reconStatus').disabled=unmatched;$('reconKpis').hidden=unmatched;
@@ -326,12 +534,40 @@ function renderRecon(){
 }
 function renderSources(){
  const s=model.stats;
- $('sourceInfo').innerHTML='<div class="source-row"><div><strong>SE1 · Contas a receber</strong><small>'+esc(raw.files.se1)+'</small></div><span>'+num(s.se1)+' linhas válidas · '+num(s.excluded1)+' fora do escopo</span></div><div class="source-row"><div><strong>SE5 · Movimentação bancária</strong><small>'+esc(raw.files.se5)+'</small></div><span>'+num(s.se5)+' linhas válidas · '+num(s.excluded5)+' fora do escopo</span></div><div class="source-summary">'+num(s.titles)+' títulos únicos em todo o período · '+num(model.groups.length)+' registros consolidados.<br>'+num(s.multiple)+' grupos com mais de uma linha SE1. Linhas integralmente iguais preservadas: '+num(s.duplicate1)+' na SE1 e '+num(s.duplicate5)+' na SE5.<br>'+num(s.onlySe1Keys)+' chaves de título exclusivas da SE1 · '+num(s.onlyBankKeys)+' exclusivas da SE5.<br>Escopo: tipo FT; filial de origem iniciada por 0101, 0102, 0104, 0106 ou 0180. O filtro mensal é aplicado após a importação.</div>';
+ $('sourceInfo').innerHTML='<div class="source-row"><div><strong>SE1 · Contas a receber</strong><small>'+esc(raw.files.se1)+'</small></div><span>'+num(s.se1)+' linhas após exclusões · '+num(s.removed1)+' excluídas pelo De_para</span></div><div class="source-row"><div><strong>SE5 · Movimentação bancária</strong><small>'+esc(raw.files.se5)+'</small></div><span>'+num(s.se5)+' linhas após exclusões · '+num(s.removed5)+' excluídas pelo De_para</span></div><div class="source-row"><div><strong>De_para · cartões e intercompany</strong><small>'+esc(raw.depara?.file||'Aguardando importação')+'</small></div><span>'+num(s.exclusionRules)+' chaves cliente + loja desconsideradas</span></div><div class="source-summary">'+num(model.groups.length)+' registros conferidos na base consolidada · '+num(model.reviewGroups.length)+' registros separados para revisão.<br>'+num(s.multiple)+' grupos com mais de uma linha SE1. Linhas integralmente iguais preservadas: '+num(s.duplicate1)+' na SE1 e '+num(s.duplicate5)+' na SE5.<br>Todos os tipos de título são aceitos. Escopo de filial de origem: 0101, 0102, 0104, 0106 ou 0180. Valores e rankings usam somente Conferido e Conferido com ressalva.</div><div class="history-months">'+Object.entries(raw.snapshots||{}).sort(([a],[b])=>a.localeCompare(b)).map(([month,meta])=>'<div class="source-row"><div><strong>'+esc(monthLabel(month))+'</strong><small>'+esc(meta.files?.se1||'SE1')+' · '+esc(meta.files?.se5||'SE5')+'</small></div><span>Atualizado em '+date((meta.updatedAt||'').slice(0,10))+'</span></div>').join('')+'</div>';
+}
+function renderHistoryStatus(){
+ const months=Object.keys(raw.snapshots||{}).filter(m=>m!=='none');
+ const hasHistory=Object.keys(raw.snapshots||{}).length>0;
+ $('historySummary').textContent=!hasHistory?'Histórico vazio. Importe SE1, SE5 e De_para para começar.':historySaved?'Histórico salvo neste navegador · '+num(months.length)+' '+(months.length===1?'mês disponível.':'meses disponíveis.'):'Histórico em uso, mas o navegador não permitiu salvá-lo. Baixe um backup antes de fechar.';
+ $('historySummary').classList.toggle('storage-warning',hasHistory&&!historySaved);
+ $('backupHistory').disabled=!hasHistory;
+ $('deparaState').textContent=raw.depara?'De_para salvo: '+raw.depara.file+' · '+num(raw.depara.excludedClients.length)+' regras. Selecione outro XLSX para atualizar as exclusões.':'Selecione o De_para XLSX nesta primeira importação para aplicar as exclusões de cartões e intercompany.';
+}
+async function persistHistory(next){
+ try{const committed=await globalThis.RecebiveisHistory.save(next);historySaved=true;return committed;}catch(e){historySaved=false;return next;}
+}
+function applyDataset(next,previousMonth=''){
+ const prepared=E.prepare(next);raw=next;model=prepared;clientDrill='';page=1;reconPage=1;$('queryFilter').value='';$('statusFilter').value='';options(previousMonth);
+ $('dataset').textContent=JSON.stringify(raw).replace(/</g,'\\u003c');render();
+}
+function backupHistory(){
+ const payload={app:'recebiveis-anderson',schemaVersion:2,exportedAt:new Date().toISOString(),raw};
+ download(new Blob([JSON.stringify(payload)],{type:'application/json'}),'Titulos-a-Receber-Historico.json');toast('Backup completo do histórico exportado.');
+}
+async function restoreHistory(file){
+ if(!file)return;
+ $('restoreHistory').disabled=true;
+ try{
+  const backup=JSON.parse(await file.text());if(backup.app!=='recebiveis-anderson'||backup.schemaVersion!==2||!backup.raw?.depara?.excludedClients)throw Error('Selecione um backup de histórico exportado por este painel.');
+  E.prepare(backup.raw);const next=E.mergeRaw(raw,backup.raw,{preferNewest:true}),saved=await persistHistory(next);applyDataset(saved,$('monthFilter').value);
+  toast(historySaved?'Histórico restaurado e salvo neste navegador.':'Backup restaurado para consulta. O navegador não permitiu salvar; mantenha o arquivo de backup.');
+ }catch(e){toast('Não foi possível restaurar: '+e.message);}finally{$('restoreHistory').disabled=false;$('fileHistory').value='';}
 }
 function record(id){
- const g=model.groups.find(g=>g.id===id);if(!g)return;
+ const g=model.allGroups.find(g=>g.id===id);if(!g)return;
  $('recordTitle').textContent=g.prefix+' '+g.number+' · '+g.name;
- $('recordBody').innerHTML='<p class="record-sub">Cliente '+esc(g.client)+' / '+esc(g.store)+' · filial '+esc(g.branch)+' · baixa '+date(g.paid)+' · '+statusTag(g)+'</p><div class="record-summary">'+[['Valor dos títulos',g.face],['Líquido SE1',g.liquid],['Juros SE1',g.interest],['Recebimento real',g.real],['Saldo SE1',g.balance]].map(([l,v])=>'<span>'+l+'<strong>'+money(v)+'</strong></span>').join('')+'</div><section class="record-section"><h3>SE1 · '+g.parts.length+' registro(s) de origem</h3><div class="record-overflow"><table><thead><tr><th>Linha</th><th>Emissão</th><th>Vencimento</th><th class="num">Título</th><th class="num">Saldo</th><th class="num">Juros</th><th class="num">Líquido baixa</th><th>Cobrança</th><th>Histórico</th></tr></thead><tbody>'+g.parts.map(r=>'<tr><td>'+r.line+'</td><td>'+date(r.issued)+'</td><td>'+date(r.due)+'</td>'+['face','balance','interest','liquid'].map(k=>'<td class="num">'+money(r[k])+'</td>').join('')+'<td>'+esc(r.charge||'—')+'</td><td>'+esc(r.history||'—')+'</td></tr>').join('')+'</tbody></table></div></section><section class="record-section"><h3>SE5 · '+g.movements.length+' movimento(s) na data da baixa</h3><div class="record-overflow"><table><thead><tr><th>Linha</th><th>Movimento</th><th>Vencimento</th><th>Motivo</th><th>Histórico</th><th class="num">Valor</th><th class="num">Juros informado</th><th>Classificação</th></tr></thead><tbody>'+(g.movements.length?g.movements.map(r=>'<tr><td>'+r.line+'</td><td>'+date(r.date)+'</td><td>'+date(r.due)+'</td><td>'+esc(r.reason)+'</td><td>'+esc(r.history)+'</td><td class="num">'+money(r.value)+'</td><td class="num">'+money(r.interest)+'</td><td>'+esc(({receipt:'Recebimento',comp:'Compensação',settlement:'Liquidação',interest:'Juros separados',discount:'Desconto',cancel:'Estorno · revisar',other:'Outro · revisar'})[r.category])+'</td></tr>').join(''):'<tr><td colspan="8">Sem correspondência para o título na data exata.</td></tr>')+'</tbody></table></div><p class="hint">SE5 comparável: '+(g.movements.length?money(g.comparable):'—')+' · diferença do líquido SE1: '+(g.delta===null?'—':money(g.delta))+'. Juros e descontos separados não são somados à base comparável. Estornos exigem revisão. A SE1 não é ajustada automaticamente.</p></section>';
+ $('recordBody').innerHTML='<p class="record-sub">Cliente '+esc(g.client)+' / '+esc(g.store)+' · filial '+esc(g.branch)+' · baixa '+date(g.paid)+' · '+statusTag(g)+'</p><div class="record-summary">'+[['Valor dos títulos',g.face],['Líquido SE1',g.liquid],['Juros SE1',g.interest],['Recebimento real',g.real],['Saldo SE1',g.balance]].map(([l,v])=>'<span>'+l+'<strong>'+money(v)+'</strong></span>').join('')+'</div><section class="record-section"><h3>SE1 · '+g.parts.length+' registro(s) de origem</h3><div class="record-overflow"><table><thead><tr><th>Linha</th><th>Emissão</th><th>Vencimento</th><th class="num">Título</th><th class="num">Saldo</th><th class="num">Juros</th><th class="num">Líquido baixa</th><th>Cobrança</th><th>Histórico</th></tr></thead><tbody>'+g.parts.map(r=>'<tr><td title="'+esc(r.sourceFile)+'">'+r.sourceLine+'</td><td>'+date(r.issued)+'</td><td>'+date(r.due)+'</td>'+['face','balance','interest','liquid'].map(k=>'<td class="num">'+money(r[k])+'</td>').join('')+'<td>'+esc(r.charge||'—')+'</td><td>'+esc(r.history||'—')+'</td></tr>').join('')+'</tbody></table></div></section><section class="record-section"><h3>SE5 · '+g.movements.length+' movimento(s) na data da baixa</h3><div class="record-overflow"><table><thead><tr><th>Linha</th><th>Movimento</th><th>Vencimento</th><th>Motivo</th><th>Histórico</th><th class="num">Valor</th><th class="num">Juros informado</th><th>Classificação</th></tr></thead><tbody>'+(g.movements.length?g.movements.map(r=>'<tr><td title="'+esc(r.sourceFile)+'">'+r.sourceLine+'</td><td>'+date(r.date)+'</td><td>'+date(r.due)+'</td><td>'+esc(r.reason)+'</td><td>'+esc(r.history)+'</td><td class="num">'+money(r.value)+'</td><td class="num">'+money(r.interest)+'</td><td>'+esc(({receipt:'Recebimento',comp:'Compensação',settlement:'Liquidação',interest:'Juros separados',discount:'Desconto',cancel:'Estorno · revisar',other:'Outro · revisar'})[r.category])+'</td></tr>').join(''):'<tr><td colspan="8">Sem correspondência para o título na data exata.</td></tr>')+'</tbody></table></div><p class="hint">SE5 comparável: '+(g.movements.length?money(g.comparable):'—')+' · diferença do líquido SE1: '+(g.delta===null?'—':money(g.delta))+'. Juros e descontos separados não são somados à base comparável. Estornos exigem revisão. A SE1 não é ajustada automaticamente.</p></section>';
  $('recordDialog').showModal();
 }
 function csvField(v){let s=String(v??'');if(/^[\s]*[=+@]/.test(s)||/^\s*-\D/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"';}
@@ -342,46 +578,49 @@ function consolidatedCSV(rows){return E.consolidatedCSV(rows);}
 function exportData(){
  let csv,name='titulos_consolidados_'+$('monthFilter').value+'.csv';
  if(tab==='conferencia'&&$('reconView').value==='unmatched'){const rows=unmatchedRows();csv=toCSV(['Filial Origem','Prefixo','Titulo','Tipo','Cliente','Loja','Beneficiario','DT Movimento','Vencimento','Motivo Baixa','Historico','Vlr Movimento','Valor Juros','Fatura','Linha SE5'],rows.map(r=>[r.branch,r.prefix,r.number,r.type,r.client,r.store,r.name,date(r.date),date(r.due),r.reason,r.history,decimal(r.value),decimal(r.interest),r.invoice,r.line]));name='se5_sem_se1_na_data_'+$('monthFilter').value+'.csv';}
- else{csv=consolidatedCSV(tab==='conferencia'?reconRows():filtered);if(tab==='conferencia')name='conferencia_se1_se5_'+$('monthFilter').value+'.csv';}
+ else{csv=tab==='conferencia'?E.consolidatedCSV(reconRows(),{includeReview:true}):consolidatedCSV(filtered);if(tab==='conferencia')name='conferencia_se1_se5_'+$('monthFilter').value+'.csv';}
  download(new Blob([csv],{type:'text/csv;charset=utf-8'}),name);toast('CSV exportado com todos os registros da seleção.');
 }
 function toast(message){$('toast').textContent=message;$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,4500);}
 async function readFile(file){const bytes=await file.arrayBuffer();let text;try{text=new TextDecoder('utf-8',{fatal:true}).decode(bytes);}catch{text=new TextDecoder('windows-1252').decode(bytes);}return E.parseCSV(text);}
 async function loadFiles(){
- const a=$('fileSe1').files[0],b=$('fileSe5').files[0];$('uploadError').hidden=true;
+ const a=$('fileSe1').files[0],b=$('fileSe5').files[0],depara=$('fileDepara').files[0];$('uploadError').hidden=true;
  if(!a||!b){$('uploadError').textContent='Selecione os dois CSVs para atualizar as bases juntas.';$('uploadError').hidden=false;return;}
- $('loadFiles').disabled=true;$('loadFiles').textContent='Validando...';
+ if(!depara&&!raw.depara){$('uploadError').textContent='Selecione também o De_para XLSX na primeira importação.';$('uploadError').hidden=false;return;}
+ $('loadFiles').disabled=true;$('loadFiles').textContent='Validando e salvando...';
  try{
-  const [one,five]=await Promise.all([readFile(a),readFile(b)]),now=new Date(),today=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(now),next={se1:one,se5:five,files:{se1:a.name,se5:b.name},created:today},prepared=E.prepare(next);
-  if(!prepared.se1.length)throw Error('A SE1 não contém registros FT nas filiais do escopo.');
-  const previousMonth=model.se1.length?$('monthFilter').value:'';
-  raw=next;model=prepared;clientDrill='';page=1;reconPage=1;$('queryFilter').value='';$('statusFilter').value='';options(previousMonth);
-  $('dataset').textContent=JSON.stringify(raw).replace(/</g,'\\u003c');$('uploadDialog').close();render();toast('Bases atualizadas. Período exibido: '+monthLabel($('monthFilter').value)+'.');
- }
- catch(e){$('uploadError').textContent=e.message;$('uploadError').hidden=false;}
+  const [one,five,rules]=await Promise.all([readFile(a),readFile(b),depara?globalThis.RecebiveisDepara.read(depara):Promise.resolve(raw.depara)]),now=new Date(),today=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(now),next={se1:one,se5:five,files:{se1:a.name,se5:b.name},created:today,updatedAt:now.toISOString(),depara:rules};
+  E.prepare(next);if(!E.canonical(next,'se1').rows.length)throw Error('O CSV da SE1 está vazio.');
+  const previousMonth=model.se1.length?$('monthFilter').value:'',merged=E.mergeRaw(raw,next);
+  const saved=await persistHistory(merged);applyDataset(saved,previousMonth);$('uploadDialog').close();
+  toast(historySaved?'Bases atualizadas e histórico salvo. Período: '+monthLabel($('monthFilter').value)+'.':'Bases atualizadas para consulta. O navegador não permitiu salvar o histórico; baixe um backup.');
+ }catch(e){$('uploadError').textContent=e.message;$('uploadError').hidden=false;}
  finally{$('loadFiles').disabled=false;$('loadFiles').textContent='Consolidar bases';}
 }
 
-function clear(){clientDrill='';$('queryFilter').value='';$('branchFilter').value='';$('statusFilter').value='';$('reconStatus').value='';page=1;reconPage=1;render();}
-function initialize(){
- icons();raw=JSON.parse($('dataset').textContent);model=E.prepare(raw);options();
+function clear(){clientDrill='';$('typeFilter').value='';$('queryFilter').value='';$('branchFilter').value='';$('statusFilter').value='';$('reconStatus').value='';page=1;reconPage=1;render();}
+async function initialize(){
+ icons();raw=JSON.parse($('dataset').textContent);
+ try{const saved=await globalThis.RecebiveisHistory.load();if(saved){E.prepare(saved);raw=E.mergeRaw(raw,saved,{preferNewest:true});}if(raw.se1.length>1)raw=await persistHistory(raw);}catch(e){historySaved=false;}
+ model=E.prepare(raw);options();
  document.querySelector('.brand').onclick=event=>{event.preventDefault();setTab('executiva');};
  document.querySelectorAll('[data-tab]').forEach(n=>n.addEventListener('click',()=>setTab(n.dataset.tab)));
  document.querySelectorAll('[data-goto]').forEach(n=>n.addEventListener('click',()=>setTab(n.dataset.goto)));
- for(const id of ['monthFilter','branchFilter','statusFilter'])$(id).addEventListener('change',()=>{page=1;reconPage=1;render();});
+ for(const id of ['monthFilter','typeFilter','branchFilter','statusFilter'])$(id).addEventListener('change',()=>{page=1;reconPage=1;render();});
  let timer;$('queryFilter').addEventListener('input',()=>{clearTimeout(timer);timer=setTimeout(()=>{page=1;reconPage=1;render();},150);});
  $('clearFilters').onclick=clear;$('drillClear').onclick=clear;
  $('reconBanner').onclick=()=>setTab('conferencia');$('exportBtn').onclick=exportData;$('updateBtn').onclick=()=>{$('uploadError').hidden=true;$('uploadDialog').showModal();};
  $('pageSize').onchange=()=>{page=1;renderDetail();};$('prevPage').onclick=()=>{page--;renderDetail();};$('nextPage').onclick=()=>{page++;renderDetail();};
  $('prevRecon').onclick=()=>{reconPage--;renderRecon();};$('nextRecon').onclick=()=>{reconPage++;renderRecon();};
  $('reconView').onchange=()=>{reconPage=1;render();};$('reconStatus').onchange=()=>{reconPage=1;renderRecon();};
- for(const id of ['fileSe1','fileSe5'])$(id).onchange=()=>$(id+'Name').textContent=$(id).files[0]?.name||'Selecione o arquivo';
+ for(const id of ['fileSe1','fileSe5','fileDepara'])$(id).onchange=()=>$(id+'Name').textContent=$(id).files[0]?.name||'Selecione o arquivo';
+ $('backupHistory').onclick=backupHistory;$('restoreHistory').onclick=()=>$('fileHistory').click();$('fileHistory').onchange=()=>restoreHistory($('fileHistory').files[0]);
  $('loadFiles').onclick=loadFiles;$('exportAll').onclick=()=>{download(new Blob([consolidatedCSV(model.groups)],{type:'text/csv;charset=utf-8'}),'Titulos-a-Receber-Base-Consolidada.csv');toast('Base completa exportada em CSV.');};
- document.addEventListener('click',event=>{const close=event.target.closest('[data-close]');if(close)$(close.dataset.close).close();const r=event.target.closest('[data-record]');if(r)record(r.dataset.record);const s=event.target.closest('[data-sort]');if(s){if(sort.key===s.dataset.sort)sort.dir*=-1;else sort={key:s.dataset.sort,dir:['name','branch','type','issued','due','paid','month'].includes(s.dataset.sort)?1:-1};page=1;renderDetail();}const client=event.target.closest('[data-client]');if(client){clientDrill=client.dataset.client;$('statusFilter').value=client.dataset.off==='true'?'zero':'';page=1;setTab('detalhamento');}});
+ document.addEventListener('click',event=>{const close=event.target.closest('[data-close]');if(close)$(close.dataset.close).close();const r=event.target.closest('[data-record]');if(r)record(r.dataset.record);const s=event.target.closest('[data-sort]');if(s){if(sort.key===s.dataset.sort)sort.dir*=-1;else sort={key:s.dataset.sort,dir:['name','branch','type','issued','due','paid','month'].includes(s.dataset.sort)?1:-1};page=1;renderDetail();}const client=event.target.closest('[data-client]');if(client){clientDrill=client.dataset.client;$('statusFilter').value='';if(client.dataset.month)$('monthFilter').value=client.dataset.month;page=1;setTab('detalhamento');}});
  setTab(location.hash.slice(1)||'executiva');
  globalThis.recebiveisApp={get model(){return model;},get filtered(){return filtered;},get metrics(){return metrics;},consolidatedCSV,toCSV,filters};
 }
-try{initialize();}catch(e){document.querySelector('main').innerHTML='<div class="fatal"><h2>Não foi possível carregar as bases</h2><p>'+esc(e.message)+'</p></div>';console.error(e);}
+initialize().catch(e=>{document.querySelector('main').innerHTML='<div class="fatal"><h2>Não foi possível carregar as bases</h2><p>'+esc(e.message)+'</p></div>';console.error(e);});
 })();
 </script>
 </body></html>
