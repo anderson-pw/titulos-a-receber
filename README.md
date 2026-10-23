@@ -1,33 +1,27 @@
-# Títulos a Receber — Grupo Décio
+# Títulos a Receber — FT e pendências de baixa
 
-Painel HTML de títulos em aberto da SE1, com visão executiva, detalhamento e Top 5 ofensores por mês do vencimento. A SE5 não é utilizada. A versão pública do GitHub inicia sem dados financeiros; importe as bases no próprio navegador.
+Painel HTML com a paleta do Grupo Décio. A SE1 é separada em dois conjuntos: **FT em cobrança** e **RA, NCC e CC pendentes de baixa**. A aplicação pública inicia sem bases financeiras ou De_paras; importe os arquivos no próprio navegador.
 
-## Importação e histórico
+## Tipos e carteiras
 
-Uma nova SE1 substitui a posição aberta atual inteira e preserva a anterior em Posição da base. Extrações abertas nunca são somadas. Reimportar uma posição idêntica não duplica o histórico. IndexedDB guarda os dados neste navegador; use o backup para preservar e transferir as posições. Cada origem, navegador e computador tem dados próprios.
+Somente FT compõe A Receber, as carteiras de cobrança, o detalhamento FT e os ofensores. RA, NCC e CC são classificados como já pagos e aguardando baixa, conforme a regra informada; ficam em uma aba própria com indicadores de valor e quantidade, gráficos por tipo e detalhamento. Não recebem carteira. Nos dois conjuntos, usar DT Baixa sem data, Vlr. Título, as exclusões do De_para e uma ocorrência por chave de título.
 
-Abertos são os títulos com DT Baixa vazia ou igual a `//`. Os valores usam Vlr. Titulo, uma vez por chave de título. Não existe filtro por Conferencia. O De_para geral exclui Cliente + Loja com Status Desconsiderar nas abas cartões e intercompany. Duplicatas conflitantes são sinalizadas e mantêm a primeira linha aberta observada.
+Grupo usa o início da Filial Orig: 01 Rodoviário, 02 TRR, 08 Peças e 09 Urbano. Apenas nos FT: Urbano/Peças → Ana Claudia, TRR → Thalita, demais grupos por Nome Cliente (0–E Milena, F–Q Maria Eduarda, R–Z Thalita). Nome ausente ou inicial inválida fica Sem classificação. Não há filtro por Conferencia e não se utiliza SE5.
 
-## Grupo e carteira
+## Vencimentos e ofensores
 
-Grupo usa o início de Filial Orig: 01 Rodoviário, 02 TRR, 08 Peças e 09 Urbano. Carteira prioriza Urbano e Peças para Ana Claudia e TRR para Thalita. Nos demais grupos usa Nome Cliente, sem acentos: 0–E Milena, F–Q Maria Eduarda, R–Z Thalita. Nome vazio fica em Sem classificação.
+Competência e gráficos diários usam Vencto Real. FT possui sua linha de valor a receber; RA/NCC ficam na página Pendências de baixa, com seletores independentes de dia. Cada seleção modifica somente o respectivo gráfico e resumo diário, preservando os indicadores gerais.
 
-## Gráficos diários
+Top 5 ofensores usa somente FT sem baixa e com mais de 3 dias corridos de atraso até a data atual de São Paulo. Exatamente 3 dias fica fora; 4 dias entra. Agrupar Cliente + Loja por mês de Vencto Real, somar Vlr. Título e ordenar do maior para o menor; empate pela chave Cliente + Loja. RA, NCC e CC ficam fora do ranking.
 
-Competência e linhas diárias RA/NCC usam Vencto Real. Cada gráfico tem seu próprio filtro de dia, seleção pelo ponto e botão Mostrar todos os dias. Selecionar um dia muda apenas a linha, o valor e a quantidade do respectivo gráfico; preserva os indicadores gerais e o outro gráfico. Limpar filtros restaura as duas séries.
+## Importação, exclusões e histórico
 
-RA, NCC e CC mostram reais e quantidade de títulos únicos. Cartão Frota e Nota Prazo aguardam os tipos aprovados.
+Em Atualizar bases, importe a SE1 completa da posição. Na primeira carga, inclua o de_para_geral.xlsx. Excluir Cliente + Loja com Status Desconsiderar nas abas cartões e intercompany. A primeira linha sem baixa define valor/vencimento em uma chave repetida; divergências são sinalizadas.
 
-## Top 5 ofensores
+Uma nova SE1 substitui a posição atual e preserva a anterior. As posições não são somadas; reimportar a mesma extração não duplica o histórico. Dados importados e histórico são processados no navegador em IndexedDB. Cada origem, navegador e computador tem dados próprios. Use backup e restauração para transferir posições. Exportar CSV acompanha a página e o recorte.
 
-Entram apenas títulos ainda em aberto com data de análise − Vencto Real > 3 dias corridos. Exatamente 3 dias não entra; 4 dias entra. Títulos pagos, futuros ou sem vencimento válido ficam fora. A data de análise é o dia atual no fuso de São Paulo e aparece no painel.
+## Publicação
 
-Cada mês usa Vencto Real e classifica Cliente + Loja pelo total aberto de Vlr. Titulo em atraso acima de 3 dias, do maior para o menor. Desempate por chave Cliente + Loja. A classificação não depende do histórico de pagamentos do cliente. Os filtros de competência, carteira, grupo, ilha e busca recalculam até cinco clientes por mês. A posição selecionada limita o conjunto de títulos; outras posições não são somadas.
-
-O ranking mostra valor em aberto, títulos únicos vencidos, atraso médio, maior atraso e vencimento mais antigo. Exportar CSV na página do ranking exporta o Top 5 mensal do recorte.
-
-## Publicação e privacidade
-
-A publicação contém somente a aplicação e os cabeçalhos, sem bases financeiras ou De_paras. As bases importadas são processadas no navegador. A publicação usa GitHub Pages, branch main, raiz do repositório, com .nojekyll. A aplicação não depende de serviços externos para os cálculos.
+Aplicação completa em index.html, sem dependências externas. GitHub Pages: branch main, raiz do repositório, com .nojekyll. A publicação pública contém somente aplicação e cabeçalhos.
 
 Desenvolvido por Anderson Prado © 2026.
