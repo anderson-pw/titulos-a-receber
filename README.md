@@ -1,52 +1,33 @@
-# Títulos a Receber
+# Títulos a Receber — Grupo Décio
 
-Painel HTML de contas a receber com a paleta do Grupo Decio, incluindo títulos em aberto e Top 5 ofensores por mês da baixa. A fonte de títulos e pagamentos é a SE1. A SE5 não é utilizada.
+Painel HTML de títulos em aberto da SE1, com visão executiva, detalhamento e Top 5 ofensores por mês do vencimento. A SE5 não é utilizada. A versão pública do GitHub inicia sem dados financeiros; importe as bases no próprio navegador.
 
-## Atualizar bases
+## Importação e histórico
 
-1. Abra o painel e clique em **Atualizar bases**.
-2. Importe a SE1 completa em CSV, incluindo os títulos sem baixa e as baixas disponíveis para o histórico dos ofensores.
-3. Na primeira carga, inclua também o `de_para_geral.xlsx` de exclusões. Depois, o arquivo salvo é reutilizado.
-4. Grupo e carteira são calculados automaticamente. Não é necessário De_para de Grupo.
-5. Use os filtros de competência/mês, carteira, ilha/tipo, Grupo e cliente. **Exportar CSV** acompanha a página e o recorte selecionados.
-6. Baixe o backup para preservar ou transferir as posições entre navegadores.
+Uma nova SE1 substitui a posição aberta atual inteira e preserva a anterior em Posição da base. Extrações abertas nunca são somadas. Reimportar uma posição idêntica não duplica o histórico. IndexedDB guarda os dados neste navegador; use o backup para preservar e transferir as posições. Cada origem, navegador e computador tem dados próprios.
 
-## Grupo pela Filial Orig
+Abertos são os títulos com DT Baixa vazia ou igual a `//`. Os valores usam Vlr. Titulo, uma vez por chave de título. Não existe filtro por Conferencia. O De_para geral exclui Cliente + Loja com Status Desconsiderar nas abas cartões e intercompany. Duplicatas conflitantes são sinalizadas e mantêm a primeira linha aberta observada.
 
-| Início da Filial Orig | Grupo | Carteira |
-|---|---|---|
-| 01 | Grupo Rodoviário | Pela inicial do Nome Cliente |
-| 02 | Grupo TRR | Thalita |
-| 08 | Grupo Peças | Ana Claudia |
-| 09 | Grupo Urbano | Ana Claudia |
+## Grupo e carteira
 
-No Grupo Rodoviário: 0–E → Milena; F–Q → Maria Eduarda; R–Z → Thalita. As exceções TRR/Urbano/Peças têm prioridade. A inicial ignora acentos, espaços e pontuação. Nome ausente ou inicial inválida fica em Sem classificação.
+Grupo usa o início de Filial Orig: 01 Rodoviário, 02 TRR, 08 Peças e 09 Urbano. Carteira prioriza Urbano e Peças para Ana Claudia e TRR para Thalita. Nos demais grupos usa Nome Cliente, sem acentos: 0–E Milena, F–Q Maria Eduarda, R–Z Thalita. Nome vazio fica em Sem classificação.
 
-## Em aberto
+## Gráficos diários
 
-A Receber soma Vlr. Titulo com DT Baixa sem data (vazio, barras ou espaços). A chave filial + prefixo + título + tipo + cliente + loja entra uma vez; a primeira linha sem baixa define valor e vencimento. O detalhamento preserva as repetições e sinaliza divergências.
+Competência e linhas diárias RA/NCC usam Vencto Real. Cada gráfico tem seu próprio filtro de dia, seleção pelo ponto e botão Mostrar todos os dias. Selecionar um dia muda apenas a linha, o valor e a quantidade do respectivo gráfico; preserva os indicadores gerais e o outro gráfico. Limpar filtros restaura as duas séries.
 
-Competência e gráficos diários de RA/NCC usam Vencto Real. As boxes de RA, NCC e CC mostram valor em reais e quantidade de títulos únicos. Cartão Frota e Nota Prazo aguardam os tipos aprovados.
+RA, NCC e CC mostram reais e quantidade de títulos únicos. Cartão Frota e Nota Prazo aguardam os tipos aprovados.
 
-O De_para geral exclui Cliente + Loja com Status Desconsiderar nas abas cartões e intercompany, tanto dos títulos abertos quanto dos pagamentos.
+## Top 5 ofensores
 
-## Top 5 ofensores mês a mês
+Entram apenas títulos ainda em aberto com data de análise − Vencto Real > 3 dias corridos. Exatamente 3 dias não entra; 4 dias entra. Títulos pagos, futuros ou sem vencimento válido ficam fora. A data de análise é o dia atual no fuso de São Paulo e aparece no painel.
 
-Cliente + loja com todos os pagamentos observados acima de 3 dias corridos de atraso: DT Baixa − Vencto Real > 3. Exatamente 3 dias não entra; 4 dias entra. Um pagamento com até 3 dias em qualquer mês do histórico impede a classificação. Vencimento ausente, recebimento não positivo ou observações conflitantes também impedem a classificação.
+Cada mês usa Vencto Real e classifica Cliente + Loja pelo total aberto de Vlr. Titulo em atraso acima de 3 dias, do maior para o menor. Desempate por chave Cliente + Loja. A classificação não depende do histórico de pagamentos do cliente. Os filtros de competência, carteira, grupo, ilha e busca recalculam até cinco clientes por mês. A posição selecionada limita o conjunto de títulos; outras posições não são somadas.
 
-A elegibilidade considera todo o histórico disponível antes dos filtros. O ranking usa o mês da DT Baixa, ordena por Juros + Vlr. Liq Baix do maior para o menor e mantém até cinco clientes por mês. Empates usam Cliente + Loja. Os filtros recalculam o ranking, e as quantidades de pagamentos observados são exibidas, inclusive quando existe apenas um.
+O ranking mostra valor em aberto, títulos únicos vencidos, atraso médio, maior atraso e vencimento mais antigo. Exportar CSV na página do ranking exporta o Top 5 mensal do recorte.
 
-A mesma chave de título + data da baixa entra uma vez, mesmo em várias extrações; divergências entre observações impedem a classificação. O filtro Posição da base não limita o histórico dos ofensores. As baixas não entram nos indicadores em aberto.
+## Publicação e privacidade
 
-## Histórico e privacidade
-
-A nova SE1 substitui a posição aberta atual inteira e preserva a anterior em Posição da base, sem somar extrações. Reimportar a mesma extração não duplica o histórico.
-
-Os dados são processados e salvos neste navegador em IndexedDB. A publicação pública contém somente aplicação e cabeçalhos, sem bases financeiras ou De_paras. Cada origem, navegador e computador possui histórico próprio, que pode ser removido ao limpar os dados de navegação. Use backup e restauração para transferir o histórico.
-
-## Estrutura
-
-- `index.html`: aplicação completa, sem dependências externas.
-- `.nojekyll`: publicação estática no GitHub Pages, branch main, raiz do repositório.
+A publicação contém somente a aplicação e os cabeçalhos, sem bases financeiras ou De_paras. As bases importadas são processadas no navegador. A publicação usa GitHub Pages, branch main, raiz do repositório, com .nojekyll. A aplicação não depende de serviços externos para os cálculos.
 
 Desenvolvido por Anderson Prado © 2026.
