@@ -1,13 +1,15 @@
-# Títulos a Receber — FT e pendências de baixa
+# Títulos a Receber — posição Protheus por Saldo líquido
 
-Painel HTML com paleta Grupo Décio. Importa a posição XLSX ou SE1 CSV e o De_para, com processamento no navegador e histórico local. A publicação pública inicia sem registros financeiros.
+Painel HTML com paleta Grupo Décio. O modelo de atualização é a exportação **Posição de títulos a receber**, com **Saldo líquido**, **Vencimento** e **Filial**. Importa XLSX original ou CSV de mesmo layout, com processamento no navegador e histórico local. A publicação pública inicia sem registros financeiros nem De_para.
 
-O valor usa **Saldo líquido** quando a coluna existe. Nas SE1 antigas, usa **Vlr. Título**. Considera somente **DT Baixa sem data**, conforme regra confirmada. A chave inclui filial, prefixo, título, parcela, tipo, cliente e loja; parcelas distintas são preservadas. O valor original não é somado novamente ao saldo líquido.
+O modelo atual já é uma posição exportada e **não exige DT Baixa**. As SE1 históricas preservam a regra anterior de baixa sem data. Saldo líquido é o valor operacional; Vlr.Titulo permanece como valor original para conferência. Não se somam os dois. A chave inclui filial, prefixo, título, parcela, tipo, cliente e loja.
 
-Somente FT recebe carteira e entra em A Receber e ofensores. RA/NCC/CC ficam em Pendências de baixa. Grupo por Filial Orig (01/02/08/09); carteiras por Nome ou Nome Cliente, preservadas as prioridades de TRR, Urbano e Peças. Exclusões por Cliente + Loja no De_para. Sem SE5 e sem filtro de Conferencia.
+Somente FT recebe carteira e entra em A Receber e ofensores. RA/NCC/CC ficam em Pendências de baixa. Grupo pelo prefixo da Filial: 01 Rodoviário, 02 TRR, 08 Peças e 09 Urbano. Nome define a faixa alfabética: 0–E Milena, F–Q Maria Eduarda e R–Z Thalita; TRR tem prioridade para Thalita, Urbano/Peças para Ana Claudia. Exclusões por Cliente + Loja no De_para, abas cartões e intercompany. Sem SE5 e sem filtro de Conferencia.
 
-Filtros de emissão, vencimento, competência, carteira, grupo, tipo e posição têm seleção múltipla e são independentes por aba. Os gráficos seguem o recorte superior. Ao selecionar várias posições, usa a mais recente entre elas, sem somá-las. Use backup para transportar o histórico entre navegadores.
+Top 5 mensal: FT da posição com mais de três dias corridos de atraso, por Cliente + Loja, ordenado por saldo vencido. A data de análise é o dia atual de São Paulo.
 
-A posição de 26/10/2026 substitui a atual e mantém as anteriores. A referência de Thalita foi usada para comparação, sem alterar os valores operacionais para igualar totais. O relatório de conciliação acompanha os arquivos entregues.
+Todos os filtros têm seleção múltipla e são independentes por aba. Ao selecionar várias posições, usa-se a mais recente entre elas, sem somar extrações. Exporte backup para transportar o histórico entre navegadores. A importação local não publica dados nem atualiza outros computadores.
 
-Verificação: `node validate-position.mjs` e `node build.mjs`. Gerar a aplicação pública com `node build-public.mjs`; esse arquivo contém somente cabeçalhos e a aplicação.
+Use uma posição completa para o escopo desejado. Cada importação substitui a posição atual. Para consolidar grupos exportados separadamente, reúna antes suas linhas em um arquivo de mesmo layout.
+
+Verificação: `node validate-position.mjs`. Construção: `node build.mjs`. Aplicação pública, sem base incorporada: `node build-public.mjs`. A verificação do projeto Power BI Desktop é feita no pacote PBIP separado.
